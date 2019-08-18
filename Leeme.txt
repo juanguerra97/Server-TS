@@ -28,10 +28,14 @@ http://www.7sabores.com/blog/git-comandos-basicos
 
 Descargar cambios
 git pull origin <nombre del repositorio | master>
+git pull --rebase origin master // Este actualiza y descarga todos los cambios
+git push -u origin master
 
 Descargar cambios si hubo un error irreversible
 git fetch origin
 git reset --hard origin/<nombre del repositorio | master>
+git pull --rebase origin master // Este actualiza y descarga todos los cambios
+git push -u origin master
 
 para ver la diferencia entre tus archivos y los del servidor
 git diff <nombre del repositorio> master
