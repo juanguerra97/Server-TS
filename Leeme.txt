@@ -23,6 +23,8 @@ Guardar Cambios
 git add * //todos los archivos
 git add "nombredelarchivo" //archivo especifico
 git commit -m "Mensaje del Cambio"
+git push origin <nombre del repositorio o de la rama> ó ver
+http://www.7sabores.com/blog/git-comandos-basicos
 
 Descargar cambios
 git pull origin <nombre del repositorio | master>
