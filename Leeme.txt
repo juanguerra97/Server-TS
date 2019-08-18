@@ -1,0 +1,10 @@
+El comando "npm run build" se mantiene vigilando
+el codigo cuando hay cambios y lo compila
+
+El comando "npm run dev" hace los mismo que build excepto
+que compila en la carpeta build, la carpeta se crea automaticamente
+si no existe
+
+El comando "npm i @types/express -D", instala los comandos
+para ayuda en el desarrollo y cuando se compila no se exporta
+en los modulos de la carpeta build
