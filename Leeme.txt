@@ -8,3 +8,31 @@ si no existe
 El comando "npm i @types/express -D", instala los comandos
 para ayuda en el desarrollo y cuando se compila no se exporta
 en los modulos de la carpeta build
+
+Para ver y guardar usuarios y contraseñas o credenciales ver esta página
+https://blog.openalfa.com/como-evitar-que-git-solicite-usuario-y-contrasena-cada-vez
+https://codeday.me/es/qa/20181211/9581.html
+
+Si quieren modificar el gitignore, vean está pagina
+https://styde.net/exclusion-de-ficheros-en-un-repositorio-git/
+
+Inicializar un repositorio, vean está página
+https://gist.github.com/cgonzalezdai/cc33db72a6fe5178637aabb562eae35c
+
+Guardar Cambios
+git add * //todos los archivos
+git add "nombredelarchivo" //archivo especifico
+git commit -m "Mensaje del Cambio"
+
+Descargar cambios
+git pull origin <nombre del repositorio | master>
+
+Descargar cambios si hubo un error irreversible
+git fetch origin
+git reset --hard origin/<nombre del repositorio | master>
+
+para ver la diferencia entre tus archivos y los del servidor
+git diff <nombre del repositorio> master
+
+git log --Ver historico de cambios del servidor
+git status --ver tus cambios en local
