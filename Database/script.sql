@@ -80,10 +80,9 @@ drop table if exists bot_pensums;
 create table bot_pensums(
 	za_carrera int not null,
     ano_pensum int not null,
+    codigo_pensum varchar(10) not null,
     activo bit not null,
-    constraint PK_ano_pensum primary key(za_carrera, ano_pensum),
-    constraint FK_pensums_a_horarios foreign key(za_carrera)
-				references bot_horarios(za_carrera)
+    constraint PK_ano_pensum primary key(za_carrera, ano_pensum)
 );
 
 -- bot_cursos
@@ -156,12 +155,12 @@ create table bot_asignaciones(
     seccion varchar(2) not null,
     hora_inicio time not null,
     hora_fin time not null,
-    constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_curso,za_jornada,za_dia,za_horario, za_profesor),
+    constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_curso, za_profesor),
     constraint FK_asignaciones_a_pensums foreign key(za_carrera, ano_pensum, za_curso)
 				references bot_cursos_pensums(za_carrera, ano_pensum, za_curso),
 	constraint FK_asignaciones_a_catedraticos foreign key(za_profesor)
 				references bot_catedraticos(za_profesor),
-	unique(za_carrera,ano_pensum, za_curso, za_jornada, za_dia, za_horario, za_profesor)
+	unique(za_carrera,ano_pensum, za_curso, za_profesor)
 );
 
 -- bot_usuarios

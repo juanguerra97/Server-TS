@@ -42,3 +42,6 @@ git diff <nombre del repositorio> master
 
 git log --Ver historico de cambios del servidor
 git status --ver tus cambios en local
+
+URL del diagrama de base de datos (Pueden editarlo)
+https://drive.google.com/file/d/1L8ZV-Qakyq0p699KouCEZ0pUAjVABdUx/view?usp=sharing
