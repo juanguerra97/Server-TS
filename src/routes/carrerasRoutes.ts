@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import indexController from '../controllers/indexController';
 import carrerasController from '../controllers/carrerasController';
 
 class IndexRoutes{
@@ -12,7 +11,8 @@ class IndexRoutes{
     }
 
     config():void{
-        this.router.get('/', indexController.index);
+        this.router.get('/', carrerasController.getAll);
+        this.router.get('/:za_carrera', carrerasController.get_Carrera);
     }
 
 }

@@ -201,3 +201,37 @@ begin
 end;//
 
 delimiter //
+
+delimiter //
+
+create procedure sen_bot_carreras(
+	in za_carera int,
+    in cod_carrera varchar(15),
+    in name_carrera varchar(30),
+    in activ bit,
+    in accion int(1)
+)
+begin
+
+	if not exists(
+		select * from bot_carreras where za_carrera = za_carera
+    )
+    then
+		select ifnull(max(za_carrera),0) + 1 into za_carera from bot_carreras;
+        
+        insert into bot_carreras values(za_carera, cod_carrera, name_carrera, activ);
+    else
+    
+		update bot_carreras
+        set
+			codigo_carrera = cod_carera,
+            nombre_carrera = name_carrera,
+            activo = activ
+		where
+			za_carrera = za_carera;
+    
+    end if;
+
+end//;
+
+delimiter //
