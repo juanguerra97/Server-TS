@@ -213,23 +213,28 @@ create procedure sen_bot_carreras(
 )
 begin
 
-	if not exists(
-		select * from bot_carreras where za_carrera = za_carera
-    )
+	if(accion = 1)
     then
-		select ifnull(max(za_carrera),0) + 1 into za_carera from bot_carreras;
-        
-        insert into bot_carreras values(za_carera, cod_carrera, name_carrera, activ);
-    else
-    
-		update bot_carreras
-        set
-			codigo_carrera = cod_carera,
-            nombre_carrera = name_carrera,
-            activo = activ
-		where
-			za_carrera = za_carera;
-    
+		if not exists(
+			select * from bot_carreras where za_carrera = za_carera
+		)
+		then
+			select ifnull(max(za_carrera),0) + 1 into za_carera from bot_carreras;
+			
+			insert into bot_carreras values(za_carera, cod_carrera, name_carrera, activ);
+		else
+		
+			update bot_carreras
+			set
+				codigo_carrera = cod_carera,
+				nombre_carrera = name_carrera,
+				activo = activ
+			where
+				za_carrera = za_carera;
+		
+		end if;
+    elseif(accion = 2) then
+		delete from bot_carreras where za_carrera = za_carera;
     end if;
 
 end//;
