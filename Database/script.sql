@@ -178,7 +178,8 @@ create table bot_usuarios(
 );
 
 drop user if exists 'usuario'@'localhost';
-grant select, insert, update, delete on db_universidad.* to 'usuario'@'localhost' identified by 'usuario';
+create user 'usuario'@'localhost' identified by 'usuario';
+grant select, insert, update, delete on db_universidad.* to 'usuario'@'localhost';
 grant execute on *.* to 'usuario'@'localhost';
 
 insert into bot_usuarios values(1,'Admin','Admin','vistas/modulos/img/admin.png',1);
