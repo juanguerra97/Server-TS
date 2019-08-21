@@ -22,7 +22,7 @@ class CarrerasController{
         // Accion = 1, inserta o actualiza
         // Accion = 2, Borra
         await pool.query("call sen_bot_carreras(" + req.body.za_carrera + ",'" + req.body.codigo_carrera + "','" + req.body.nombre_carrera + "'," + req.body.activo + "," + req.body.accion + ");");
-        res.send("Carrera actualizada exitosamente!!!");
+        res.send("Operación realizada exitosamente!!!");
     }
 
     /*public async eliminarCarrera(req:Request, res:Response){

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import carrerasController from '../controllers/carrerasController';
 
-class IndexRoutes{
+class CarrerasRoutes{
 
     public router: Router;
 
@@ -18,5 +18,5 @@ class IndexRoutes{
 
 }
 
-const indexRoutes = new IndexRoutes();
-export default indexRoutes.router;
+const carrerasRoutes = new CarrerasRoutes();
+export default carrerasRoutes.router;

@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import indexRoutes from './routes/indexRoutes';
 import carrerasRoutes from './routes/carrerasRoutes';
+import jornadasRoutes from './routes/jornadasRoutes'
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -28,6 +29,7 @@ class Server{
     routes():void{
         this.app.use(indexRoutes);
         this.app.use('/cruds/carreras', carrerasRoutes);
+        this.app.use('/cruds/jornadas', jornadasRoutes);
 
     }
 

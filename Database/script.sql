@@ -240,3 +240,52 @@ begin
 end//;
 
 delimiter //
+
+delimiter //
+
+create procedure sen_bot_jornadas(
+	in za_jor int,
+    in za_carre int,
+    in nombre_jor varchar(30),
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+		if not exists(
+			select * from bot_jornadas
+            where
+				za_jornada = za_jor and
+                za_carrera = za_carre
+        )
+        then
+			select ifnull(max(za_jornada),0) + 1 into za_jor from bot_jornadas
+            where
+				za_carrera = za_carre;
+			insert into bot_jornadas values(za_jor, za_carre, nombre_jor, activ);
+        else
+			update bot_jornadas
+            set
+				nombre_jornada = nombre_jor,
+                activo = activ
+			where
+				za_jornada = za_jor and
+                za_carrera = za_carre;
+        end if;
+    else
+		if exists(
+			select * from bot_jornadas where za_carrera = za_carre and za_jornada = za_jor
+        )
+        then
+			delete from bot_jornadas
+            where
+				za_carrera = za_carre and
+                za_jornada = za_jor;
+        end if;
+    end if;
+
+end//;
+
+delimiter //

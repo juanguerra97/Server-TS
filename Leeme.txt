@@ -1,3 +1,6 @@
+Si no tienen instalado typescript ejecuten este comando
+npm install -g typescript
+
 El comando "npm run build" se mantiene vigilando
 el codigo cuando hay cambios y lo compila
 
@@ -45,3 +48,7 @@ git status --ver tus cambios en local
 
 URL del diagrama de base de datos (Pueden editarlo)
 https://drive.google.com/file/d/1L8ZV-Qakyq0p699KouCEZ0pUAjVABdUx/view?usp=sharing
+
+Para los cruds básicos el campo de accion solo se usara para realizar una accion
+accion = 1 (Aquí inserto ó actulizo)
+accion = 2 (Aqui elimino el registro)
