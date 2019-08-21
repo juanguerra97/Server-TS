@@ -18,7 +18,7 @@ drop table if exists bot_carreras;
 create table bot_carreras(
 	za_carrera int not null,
     codigo_carrera varchar(15) not null,
-    nombre_carrera varchar(30) not null,
+    nombre_carrera varchar(100) not null,
     activo bit,
     constraint PK_za_carrera primary key(za_carrera),
     unique(za_carrera)
@@ -91,7 +91,7 @@ drop table if exists bot_cursos;
 
 create table bot_cursos(
     za_curso int not null,
-    nombre_curso varchar(30) not null,
+    nombre_curso varchar(150) not null,
     usa_laboratorio bit not null,
     activo bit not null,
     constraint PK_za_curso primary key(za_curso),
@@ -207,7 +207,7 @@ delimiter //
 create procedure sen_bot_carreras(
 	in za_carera int,
     in cod_carrera varchar(15),
-    in name_carrera varchar(30),
+    in name_carrera varchar(100),
     in activ bit,
     in accion int(1)
 )

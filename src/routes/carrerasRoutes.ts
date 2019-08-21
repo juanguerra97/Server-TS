@@ -13,6 +13,7 @@ class IndexRoutes{
     config():void{
         this.router.get('/', carrerasController.getAll);
         this.router.get('/:za_carrera', carrerasController.get_Carrera);
+        this.router.post('/', carrerasController.opcionesCarrera);
     }
 
 }
