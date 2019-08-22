@@ -290,3 +290,91 @@ begin
 end//;
 
 delimiter //
+
+delimiter //
+create procedure sen_bot_pensums(
+	in ano_pen int,
+    in za_carre int,
+    in cod_pensum varchar(10),
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+    
+		if not exists(
+			select * from bot_pensums where za_carrera = za_carre and ano_pensum = ano_pen
+        )
+        then
+        
+			insert into bot_pensums values(ano_pen,za_carre,cod_pensum,activ);
+        
+        else
+			update bot_pensums
+            set
+				codigo_pensum = cod_pensum,
+                activo = activ
+			where
+				za_carrera = za_carre and
+                ano_pensum = ano_pen;
+        end if;
+    
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_pensums where za_carrera = za_carre and ano_pensum = ano_pen
+        )
+        then
+			delete from bot_pensums where za_carrera = za_carre and ano_pensum = ano_pen;
+        end if;
+    end if;
+
+end//;
+delimiter //
+
+delimiter //
+
+create procedure sen_bot_cursos(
+	in za_cur int,
+    in nombre_cur varchar(100),
+    in usa_lab bit,
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+		
+        if not exists(
+			select * from bot_cursos where za_curso = za_cur
+        )
+        then
+			select ifnull(max(za_curso),0) + 1 into za_cur from bot_cursos;
+            
+            insert into bot_cursos values(za_cur,nombre_cur,usa_lab,activ);
+		else
+			update bot_cursos
+            set
+				nombre_curso = nombre_cur,
+                usa_laboratorio = usa_lab,
+                activo = activ
+			where
+				za_curso = za_cur;
+        end if;
+    
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_cursos where za_curso = za_cur
+        )
+        then
+			delete from bot_cursos where za_curso = za_cur;
+        end if;
+    end if;
+
+end//;
+
+delimiter //
