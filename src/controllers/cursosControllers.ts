@@ -15,7 +15,7 @@ class CursosController{
 
     public async opcionesCurso (req:Request, res:Response) {
         pool.query("call sen_bot_cursos(" + req.body.za_curso + ",'" + req.body.nombre_curso + "'," + req.body.usa_laboratorio + "," + req.body.activo + "," + req.body.accion + ");");
-        res.send("Operación realizada exitosamente!!!");
+        res.json({text:"Operación realizada exitosamente!!!"});
     }
 
 }

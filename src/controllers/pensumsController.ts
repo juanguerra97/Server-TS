@@ -15,7 +15,7 @@ class PensumsController{
 
     public async opcionesPensums (req:Request, res:Response) {
         await pool.query("call sen_bot_pensums(" + req.body.ano_pensum + "," + req.body.za_carrera + "," + req.body.codigo_pensum + "," + req.body.activo + "," + req.body.accion + ");")
-        res.send("Operación realizada exitosamente!!!");
+        res.json({text:"Operación realizada exitosamente!!!"});
     }
 
 }

@@ -30,7 +30,7 @@ class Server{
     }
 
     routes():void{
-        this.app.use(indexRoutes);
+        //this.app.use(indexRoutes);
         this.app.use('/cruds/carreras', carrerasRoutes);
         this.app.use('/cruds/jornadas', jornadasRoutes);
         this.app.use('/cruds/diasjornadas', diasJornadasRoutes);
