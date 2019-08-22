@@ -467,3 +467,60 @@ begin
 end//;
 
 delimiter //
+
+delimiter //
+CREATE PROCEDURE sen_bot_dias_jornadas(
+	in za_d int,
+    in za_jor int,
+    in za_carre int,
+    in di varchar(20),
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+		if not exists(
+			select * from bot_dias_jornadas
+            where
+				za_dia = za_d and
+                za_jornada = za_jor and
+                za_carrera = za_carre
+        )
+        then
+			select ifnull(max(za_dia),0) + 1 into za_d from bot_dias_jornadas
+            where
+				za_jornada = za_jor and
+                za_carrera = za_carre;
+			insert into bot_dias_jornadas values(za_jor,za_carrera,za_d,di,activ);
+        else
+			update bot_dias_jornadas
+            set
+				dia = di,
+                activo = activ
+			where
+				za_dia = za_d and
+                za_jornada = za_jor and
+                za_carrera = za_carre;
+        end if;
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_dias_jornadas
+            where
+				za_dia = za_d and
+                za_jornada = za_jor and
+                za_carrera = za_carre
+        )
+        then
+			delete from bot_dias_jornadas
+            where
+				za_dia = za_d and
+                za_jornada = za_jor and
+                za_carrera = za_carre;
+        end if;
+    end if;
+
+end//;
+delimiter //
