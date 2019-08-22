@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import cursosPensumsController from '../controllers/cursosPensumsController';
 
-class IndexRoutes{
+class CursosPensumsRoutes{
 
     public router: Router;
 
@@ -18,5 +18,5 @@ class IndexRoutes{
 
 }
 
-const indexRoutes = new IndexRoutes();
-export default indexRoutes.router;
+const cursosPensumsRoutes = new CursosPensumsRoutes();
+export default cursosPensumsRoutes.router;
