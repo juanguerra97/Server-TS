@@ -227,7 +227,7 @@ begin
 		
 			update bot_carreras
 			set
-				codigo_carrera = cod_carera,
+				codigo_carrera = cod_carrera,
 				nombre_carrera = name_carrera,
 				activo = activ
 			where
