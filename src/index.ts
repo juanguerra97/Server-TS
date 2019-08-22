@@ -5,6 +5,8 @@ import jornadasRoutes from './routes/jornadasRoutes';
 import diasJornadasRoutes from './routes/diasJornadasRoutes';
 import pensumsRoutes from './routes/pensumsRoutes';
 import cursosRoutes from './routes/cursosRoutes';
+import catedraticosRoutes from './routes/catedraticosRoutes';
+import cursosPensumsRoutes from './routes/cursosPensumsRoutes';
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -36,6 +38,8 @@ class Server{
         this.app.use('/cruds/diasjornadas', diasJornadasRoutes);
         this.app.use('/cruds/pensums', pensumsRoutes);
         this.app.use('/cruds/cursos', cursosRoutes);
+        this.app.use('/cruds/catedraticos', catedraticosRoutes);
+        this.app.use('/cruds/cursosPensums', cursosPensumsRoutes);
 
     }
 

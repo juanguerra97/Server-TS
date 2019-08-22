@@ -378,3 +378,92 @@ begin
 end//;
 
 delimiter //
+
+delimiter //
+create procedure sen_bot_catedraticos(
+	in za_prof int,
+    in nombre varchar(100),
+    in apellido varchar(100),
+    in profesi varchar(200),
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+    
+		if not exists(
+			select * from bot_catedraticos where za_profesor = za_prof
+        )
+        then
+			select ifnull(max(za_profesor),0) + 1 into za_prof from bot_catedraticos where za_profesor = za_prof;
+            insert into bot_catedraticos values(za_prof,nombre,apellido,profesi,activ);
+        else
+			update bot_catedraticos
+            set
+				nombres = nombre,
+                apellidos = apellido,
+                profesion = profesi,
+                activo = activ
+			where
+				za_profesor = za_prof;
+        end if;
+    
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_catedraticos where za_profesor = za_prof
+        )
+        then
+			delete from bot_catedraticos where za_profesor = za_prof;
+        end if;
+    end if;
+
+end//;
+delimiter //
+
+delimiter //
+
+create procedure sen_bot_cursos_pensums(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int,
+    in cod_pensum varchar(10),
+    in activ bit,
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+    
+		if not exists(
+			select * from bot_cursos_pensums where za_carrera = za_carre and ano_pensum = ano_pen and za_curso = za_cur
+        )
+        then
+			insert into bot_cursos_pensums values(za_carre,ano_pen,za_cur,cod_pensum,activ);
+        else
+			update bot_cursos_pensums
+            set
+				codigo_pensum = cod_pensum,
+                activo = activ
+			where
+				za_carrera = za_carre and
+                ano_pensum = ano_pen and
+                za_curso = za_cur;
+        end if;
+    
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_cursos_pensums where za_carrera = za_carre and ano_pensum = ano_pen and za_curso = za_cur
+        )
+        then
+			delete from bot_cursos_pensums where za_carrera = za_carre and ano_pensum = ano_pen and za_curso = za_cur;
+        end if;
+    end if;
+
+end//;
+
+delimiter //
