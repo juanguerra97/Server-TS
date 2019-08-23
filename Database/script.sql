@@ -524,3 +524,67 @@ begin
 
 end//;
 delimiter //
+
+delimiter //
+create procedure sen_bot_asignaciones(
+	in za_carrer int,
+    in za_prof int,
+    in za_cur int,
+    in ano_pen int,
+    in no_semes int,
+    in sec varchar(2),
+    in hora_ini varchar(10),
+    in hora_fi varchar(10),
+    in accion int
+)
+begin
+
+	if(accion = 1)
+    then
+    
+		if not exists(
+			select * from bot_asignaciones
+            where
+				za_carrera = za_carrer and
+                za_profesor = za_prof and
+                za_curso = za_cur and
+                ano_pensum = ano_pen
+        )
+        then
+			insert into bot_asignaciones values(za_carrer,za_prof, za_cur, ano_pen, no_semes, sec, convert(hora_ini,time), convert(hora_fi,time));
+        else
+			update bot_asignaciones
+            set
+				no_semestre = no_semes,
+                seccion = sec,
+                hora_inicio = convert(hora_ini,time),
+                hora_fin = convert(hora_fi,time)
+			where
+				za_carrera = za_carrer and
+                za_profesor = za_prof and
+                za_curso = za_cur and
+                ano_pensum = ano_pen;
+        end if;
+    
+    elseif(accion = 2)
+    then
+		if exists(
+			select * from bot_asignaciones
+            where
+				za_carrera = za_carrer and
+                za_profesor = za_prof and
+                za_curso = za_cur and
+                ano_pensum = ano_pen
+        )
+        then
+			delete from bot_asignaciones
+			where
+				za_carrera = za_carrer and
+                za_profesor = za_prof and
+                za_curso = za_cur and
+                ano_pensum = ano_pen;
+        end if;
+    end if;
+
+end//;
+delimiter //

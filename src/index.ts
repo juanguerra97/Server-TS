@@ -7,6 +7,7 @@ import pensumsRoutes from './routes/pensumsRoutes';
 import cursosRoutes from './routes/cursosRoutes';
 import catedraticosRoutes from './routes/catedraticosRoutes';
 import cursosPensumsRoutes from './routes/cursosPensumsRoutes';
+import asignaciones from './routes/asignacionesRoutes';
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -40,6 +41,7 @@ class Server{
         this.app.use('/cruds/cursos', cursosRoutes);
         this.app.use('/cruds/catedraticos', catedraticosRoutes);
         this.app.use('/cruds/cursosPensums', cursosPensumsRoutes);
+        this.app.use('/cruds/asignaciones', asignaciones);
 
     }
 
