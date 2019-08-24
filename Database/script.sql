@@ -309,7 +309,7 @@ begin
         )
         then
         
-			insert into bot_pensums values(ano_pen,za_carre,cod_pensum,activ);
+			insert into bot_pensums values(za_carre,ano_pen,cod_pensum,activ);
         
         else
 			update bot_pensums
