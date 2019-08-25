@@ -481,45 +481,55 @@ begin
 
 	if(accion = 1)
     then
-		if not exists(
+		
+        if not exists(
 			select * from bot_dias_jornadas
             where
-				za_dia = za_d and
+				za_carrera = za_carre and
                 za_jornada = za_jor and
-                za_carrera = za_carre
+                za_dia = za_d
         )
         then
-			select ifnull(max(za_dia),0) + 1 into za_d from bot_dias_jornadas
+			
+            select ifnull(max(za_dia),0) + 1 into za_d from bot_dias_jornadas
             where
-				za_jornada = za_jor and
-                za_carrera = za_carre;
-			insert into bot_dias_jornadas values(za_jor,za_carrera,za_d,di,activ);
+				za_carrera = za_carre and
+                za_jornada = za_jor;
+                
+			insert into bot_dias_jornadas values(za_jor, za_carre, za_d, di, activ);
+            
         else
+        
 			update bot_dias_jornadas
             set
 				dia = di,
                 activo = activ
 			where
-				za_dia = za_d and
+				za_carrera = za_carre and
                 za_jornada = za_jor and
-                za_carrera = za_carre;
+                za_dia = za_d;
+        
         end if;
-    elseif(accion = 2)
-    then
+        
+    else
+    
 		if exists(
 			select * from bot_dias_jornadas
             where
-				za_dia = za_d and
+				za_carrera = za_carre and
                 za_jornada = za_jor and
-                za_carrera = za_carre
+                za_dia = za_d
         )
         then
+        
 			delete from bot_dias_jornadas
             where
-				za_dia = za_d and
+				za_carrera = za_carre and
                 za_jornada = za_jor and
-                za_carrera = za_carre;
+                za_dia = za_d;
+        
         end if;
+    
     end if;
 
 end//;

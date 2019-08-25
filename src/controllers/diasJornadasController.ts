@@ -14,7 +14,7 @@ class DiasJornadasController{
     }
 
     public async opcionesDiasJornadas(req:Request, res:Response){
-        await pool.query("call sen_bot_dias_jornadas("+ req.body.za_dia + "," + req.body.za_jornada + "," + req.body.za_carrera + ",'" + req.body.nombre_jornada + "'," + req.body.activo + "," + req.body.accion + ");");
+        await pool.query("call sen_bot_dias_jornadas("+ req.body.za_dia + "," + req.body.za_jornada + "," + req.body.za_carrera + ",'" + req.body.dia + "'," + req.body.activo + "," + req.body.accion + ");");
         res.json({text:"Operación realizada exitosamente!!!"});
     }
 
