@@ -429,7 +429,7 @@ create procedure sen_bot_cursos_pensums(
 	in za_carre int,
     in ano_pen int,
     in za_cur int,
-    in cod_pensum varchar(10),
+    in cic int,
     in activ bit,
     in accion int
 )
@@ -442,11 +442,11 @@ begin
 			select * from bot_cursos_pensums where za_carrera = za_carre and ano_pensum = ano_pen and za_curso = za_cur
         )
         then
-			insert into bot_cursos_pensums values(za_carre,ano_pen,za_cur,cod_pensum,activ);
+			insert into bot_cursos_pensums values(za_carre,ano_pen,za_cur,cic,activ);
         else
 			update bot_cursos_pensums
             set
-				codigo_pensum = cod_pensum,
+				ciclo = cic,
                 activo = activ
 			where
 				za_carrera = za_carre and
