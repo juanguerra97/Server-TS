@@ -8,7 +8,7 @@
 
 drop schema if exists db_universidad;
 
-CREATE SCHEMA IF NOT EXISTS db_universidad DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS db_universidad default character set utf8 collate utf8_spanish_ci ;
 USE db_universidad;
 
 -- bot_carrera
