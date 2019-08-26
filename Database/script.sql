@@ -598,3 +598,213 @@ begin
 
 end//;
 delimiter //
+
+-- Todos los selects necesarios
+delimiter //
+
+create procedure cos_bot_jornadas(
+	in za_carre int,
+    in za_jor int
+)
+begin
+
+	if(za_jor = 0)
+    then
+		select
+			jor.za_carrera,
+            jor.za_jornada,
+            jor.nombre_jornada,
+            jor.activo,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_jornadas as jor inner join
+            bot_carreras as car on
+            car.za_carrera = jor.za_carrera
+		where
+			jor.za_carrera = za_carre;
+    else
+		select
+			jor.za_carrera,
+            jor.za_jornada,
+            jor.nombre_jornada,
+            jor.activo,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_jornadas as jor inner join
+            bot_carreras as car on
+            car.za_carrera = jor.za_carrera
+		where
+			jor.za_carrera = za_carre and
+            jor.za_jornada = za_jor;
+    end if;
+
+end//;
+
+delimiter //
+
+delimiter //
+
+create procedure cos_bot_dias_jornadas(
+	in za_carre int,
+    in za_jor int,
+    in za_di int
+)
+begin
+
+	if(za_di = 0)
+    then
+		select
+			dias.za_dia,
+            dias.za_carrera,
+            dias.za_jornada,
+            dias.dia,
+            dias.activo,
+            jor.nombre_jornada,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_dias_jornadas as dias inner join
+            bot_jornadas as jor on
+            jor.za_jornada = dias.za_jornada and
+            jor.za_carrera = dias.za_carrera
+            
+            inner join
+            
+            bot_carreras as car on
+            car.za_carrera = jor.za_carrera
+		
+        where
+			dias.za_jornada = za_jor and
+            dias.za_carrera = za_carre;
+        
+    else
+		select
+			dias.za_dia,
+            dias.za_carrera,
+            dias.za_jornada,
+            dias.dia,
+            dias.activo,
+            jor.nombre_jornada,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_dias_jornadas as dias inner join
+            bot_jornadas as jor on
+            jor.za_jornada = dias.za_jornada and
+            jor.za_carrera = dias.za_carrera
+            
+            inner join
+            
+            bot_carreras as car on
+            car.za_carrera = jor.za_carrera
+		
+        where
+			dias.za_jornada = za_jor and
+            dias.za_carrera = za_carre and
+            dias.za_dia = za_di;
+    end if;
+
+end//;
+
+delimiter //
+
+delimiter //
+
+create procedure cos_bot_pensums(
+	in za_carre int,
+    in ano_pen int
+)
+begin
+
+	if(ano_pen = 1)
+    then
+		select
+			pen.za_carrera,
+            pen.ano_pensum,
+            pen.codigo_pensum,
+            pen.activo,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_pensums as pen inner join
+            bot_carreras as car on
+            car.za_carrera = pen.za_carrera
+		where
+			pen.za_carrera = za_carre;
+    else
+		select
+			pen.za_carrera,
+            pen.ano_pensum,
+            pen.codigo_pensum,
+            pen.activo,
+            car.nombre_carrera,
+            car.codigo_carrera
+		from
+			bot_pensums as pen inner join
+            bot_carreras as car on
+            car.za_carrera = pen.za_carrera
+		where
+			pen.za_carrera = za_carre and
+            pen.ano_pensum = ano_pen;
+    end if;
+
+end//;
+
+delimiter //
+
+delimiter //
+
+create procedure cos_bot_cursos_pensums(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int
+)
+begin
+
+	if(za_cur = 0)
+    then
+    
+		select
+			cur.za_carrera,
+            cur.ano_pensum,
+            cur.ciclo,
+            cur.activo,
+            curr.nombre_curso
+		from
+			bot_cursos_pensums as cur 
+            
+            inner join
+            
+            bot_cursos curr on
+            curr.za_curso = cur.za_curso
+            
+		where
+			cur.za_carrera = za_carre and
+            cur.ano_pensum = ano_pen;
+    
+    else
+		select
+			cur.za_carrera,
+            cur.ano_pensum,
+            cur.ciclo,
+            cur.activo,
+            curr.nombre_curso
+		from
+			bot_cursos_pensums as cur 
+            
+            inner join
+            
+            bot_cursos curr on
+            curr.za_curso = cur.za_curso
+            
+		where
+			cur.za_carrera = za_carre and
+            cur.ano_pensum = ano_pen and
+            cur.za_curso = za_cur;
+    end if;
+
+end//;
+
+delimiter //

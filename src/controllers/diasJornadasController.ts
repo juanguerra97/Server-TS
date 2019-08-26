@@ -4,13 +4,13 @@ import pool from '../db';
 class DiasJornadasController{
 
     public async getAllDiasJornadas (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_dias_jornadas where za_carrera = ' + req.params.za_carrera + ' and za_jornada = ' + req.params.za_jornada);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_dias_jornadas(' + req.params.za_carrera + ',' + req.params.za_jornada + ',0);');
+        res.json(rows[0][0]);
     }
 
     public async getUnaDiaJornada (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_dias_jornadas where za_carrera = ' + req.params.za_carrera + ' and za_jornada = ' + req.params.za_jornada + ' and za_dia = ' + req.params.za_dia);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_dias_jornadas(' + req.params.za_carrera + ',' + req.params.za_jornada + ',' + req.params.za_dia + ');');
+        res.json(rows[0][0]);
     }
 
     public async opcionesDiasJornadas(req:Request, res:Response){

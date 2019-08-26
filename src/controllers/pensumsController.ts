@@ -4,13 +4,13 @@ import pool from '../db';
 class PensumsController{
 
     public async getAllPensums (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_pensums where za_carrera = ' + req.params.za_carrera);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_pensums(' + req.params.za_carrera + ',0);');
+        res.json(rows[0][0]);
     }
 
     public async getOnePensums (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_pensums where za_carrera = ' + req.params.za_carrera + ' and ano_pensum = ' + req.params.ano_pensum);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_pensums(' + req.params.za_carrera + ',' + req.params.ano_pensum + ');');
+        res.json(rows[0][0]);
     }
 
     public async opcionesPensums (req:Request, res:Response) {

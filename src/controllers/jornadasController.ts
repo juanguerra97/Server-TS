@@ -4,13 +4,13 @@ import pool from '../db';
 class JornadasController{
 
     public async getAllJornadas (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_jornadas where za_carrera = ' + req.params.za_carrera);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_jornadas(' + req.params.za_carrera + ',0);');
+        res.json(rows[0][0]);
     }
 
     public async getUnaJornada (req:Request, res:Response) {
-        const rows = await pool.query('select * from bot_jornadas where za_carrera = ' + req.params.za_carrera + ' and za_jornada = ' + req.params.za_jornada);
-        res.json(rows[0]);
+        const rows = await pool.query('call cos_bot_jornadas(' + req.params.za_carrera + ',' + req.params.za_jornada + ');');
+        res.json(rows[0][0]);
     }
 
     public async opcionesJornadas(req:Request, res:Response){
