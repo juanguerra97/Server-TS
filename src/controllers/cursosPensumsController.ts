@@ -14,7 +14,7 @@ class CursosPensumsController{
     }
 
     public async opcionesCursosPensums (req:Request, res:Response) {
-        await pool.query('select * from bot_cursos_pensums where za_carrera = ' + req.params.za_carrera + ' and ano_pensum = ' + req.params.ano_pensum + ' and za_curso =' + req.params.za_curso);
+        await pool.query('call sen_bot_cursos_pensums(' + req.body.za_carrera + ',' + req.body.ano_pensum + ',' + req.body.za_curso + ',' + req.body.ciclo + ',' + req.body.activo + ',' + req.body.accion + ');');
         res.json({text: "Operación realizada exitosamente!!!"});
     }
 
