@@ -397,7 +397,7 @@ begin
 			select * from bot_catedraticos where za_profesor = za_prof
         )
         then
-			select ifnull(max(za_profesor),0) + 1 into za_prof from bot_catedraticos where za_profesor = za_prof;
+			select ifnull(max(za_profesor),0) + 1 into za_prof from bot_catedraticos;
             insert into bot_catedraticos values(za_prof,nombre,apellido,profesi,activ);
         else
 			update bot_catedraticos
