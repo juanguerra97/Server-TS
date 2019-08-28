@@ -148,19 +148,22 @@ drop table if exists bot_asignaciones;
 create table bot_asignaciones(
 	za_carrera int not null,
     ano_pensum int not null,
+    za_jornada int not null,
+    ano int not null,
+    no_semestre int not null,
+    seccion varchar(2) not null,
     za_curso int not null,
     za_profesor int not null,
-    no_semestre int not null,
-    ano int not null,
-    seccion varchar(2) not null,
+    za_dia int not null,
     hora_inicio time not null,
     hora_fin time not null,
-    constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_curso, za_profesor),
+    constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_curso, za_profesor, za_dia, hora_inicio),
     constraint FK_asignaciones_a_pensums foreign key(za_carrera, ano_pensum, za_curso)
 				references bot_cursos_pensums(za_carrera, ano_pensum, za_curso),
 	constraint FK_asignaciones_a_catedraticos foreign key(za_profesor)
 				references bot_catedraticos(za_profesor),
-	unique(za_carrera,ano_pensum, za_curso, za_profesor)
+	CONSTRAINT FK_asig_a_diasjornadas FOREIGN KEY(za_carrera,za_jornada,za_dia)
+				REFERENCES bot_dias_jornadas(za_carrera,za_jornada,za_dia)
 );
 
 -- bot_usuarios
@@ -177,10 +180,10 @@ create table bot_usuarios(
     unique(za_usuario)
 );
 
-drop user if exists 'usuario'@'localhost';
-create user 'usuario'@'localhost' identified by 'usuario';
-grant select, insert, update, delete on db_universidad.* to 'usuario'@'localhost';
-grant execute on *.* to 'usuario'@'localhost';
+drop user if exists 'usuario'@'%';
+create user 'usuario'@'%' identified by 'usuario';
+grant select, insert, update, delete on db_universidad.* to 'usuario'@'%';
+grant execute on *.* to 'usuario'@'%';
 
 insert into bot_usuarios values(1,'Admin','Admin','vistas/modulos/img/admin.png',1);
 
@@ -378,7 +381,6 @@ begin
 end//;
 
 delimiter //
-
 delimiter //
 create procedure sen_bot_catedraticos(
 	in za_prof int,
@@ -538,11 +540,14 @@ delimiter //
 delimiter //
 create procedure sen_bot_asignaciones(
 	in za_carrer int,
-    in za_prof int,
-    in za_cur int,
     in ano_pen int,
+    in za_jor int,
+    in an int,
     in no_semes int,
     in sec varchar(2),
+    in za_cur int,  
+    in za_prof int,
+    in za_di int,
     in hora_ini varchar(10),
     in hora_fi varchar(10),
     in accion int
@@ -556,24 +561,38 @@ begin
 			select * from bot_asignaciones
             where
 				za_carrera = za_carrer and
-                za_profesor = za_prof and
+                ano_pensum = ano_pen and
+                za_jornada = za_jor and
+                ano = an and
+                no_semestre = no_semes and
+                seccion = sec and
                 za_curso = za_cur and
-                ano_pensum = ano_pen
+                za_profesor = za_prof and
+                za_dia = za_di and
+                hora_inicio = hora_ini
         )
         then
-			insert into bot_asignaciones values(za_carrer,za_prof, za_cur, ano_pen, no_semes, sec, convert(hora_ini,time), convert(hora_fi,time));
+			insert into bot_asignaciones values(za_carrer,ano_pen, za_jor, an, no_semes, sec, za_cur, za_prof,za_di, convert(hora_ini,time), convert(hora_fi,time));
         else
 			update bot_asignaciones
             set
+				ano = an,
 				no_semestre = no_semes,
                 seccion = sec,
+                za_dia = za_di,
                 hora_inicio = convert(hora_ini,time),
                 hora_fin = convert(hora_fi,time)
 			where
 				za_carrera = za_carrer and
-                za_profesor = za_prof and
+                ano_pensum = ano_pen and
+                za_jornada = za_jor and
+                ano = an and
+                no_semestre = no_semes and
+                seccion = sec and
                 za_curso = za_cur and
-                ano_pensum = ano_pen;
+                za_profesor = za_prof and
+                za_dia = za_di and
+                hora_inicio = hora_ini;
         end if;
     
     elseif(accion = 2)
@@ -582,17 +601,29 @@ begin
 			select * from bot_asignaciones
             where
 				za_carrera = za_carrer and
-                za_profesor = za_prof and
+                ano_pensum = ano_pen and
+                za_jornada = za_jor and
+                ano = an and
+                no_semestre = no_semes and
+                seccion = sec and
                 za_curso = za_cur and
-                ano_pensum = ano_pen
+                za_profesor = za_prof and
+                za_dia = za_di and
+                hora_inicio = hora_ini
         )
         then
 			delete from bot_asignaciones
 			where
 				za_carrera = za_carrer and
-                za_profesor = za_prof and
+                ano_pensum = ano_pen and
+                za_jornada = za_jor and
+                ano = an and
+                no_semestre = no_semes and
+                seccion = sec and
                 za_curso = za_cur and
-                ano_pensum = ano_pen;
+                za_profesor = za_prof and
+                za_dia = za_di and
+                hora_inicio = hora_ini;
         end if;
     end if;
 
