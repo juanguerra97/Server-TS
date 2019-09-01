@@ -22,11 +22,23 @@ class CursosPensumsController{
         
         try{
 
-            for(let parametro in ['za_carrera','ano_pensum','ciclo']){
-                if(req.query[parametro] == undefined){
-                    throw {message:"Falta parametro " + parametro};
-                }
+            if(req.query.za_carrera == undefined){
+                throw {message:"Falta parametro za_carrera"};
             }
+
+            if(req.query.ano_pensum == undefined){
+                throw {message:"Falta parametro ano_pensum"};
+            }
+
+            if(req.query.ciclo == undefined){
+                throw {message:"Falta parametro ciclo"};
+            }
+
+            // for(let parametro in ['za_carrera','ano_pensum','ciclo'].values()){
+            //     if(req.query[parametro] == undefined){
+            //         throw {message:"Falta parametro " + parametro};
+            //     }
+            // }
 
             const rows = await pool.query(
                 `SELECT C.za_curso,C.nombre_curso,C.usa_laboratorio,C.activo 
