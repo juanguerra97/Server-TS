@@ -749,7 +749,7 @@ create procedure cos_bot_pensums(
 )
 begin
 
-	if(ano_pen = 1)
+	if(ano_pen = 0)
     then
 		select
 			pen.za_carrera,
