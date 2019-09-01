@@ -742,14 +742,13 @@ end//;
 delimiter //
 
 delimiter //
-
 create procedure cos_bot_pensums(
 	in za_carre int,
     in ano_pen int
 )
 begin
 
-	if(ano_pen = 1)
+	if(ano_pen = 0)
     then
 		select
 			pen.za_carrera,
