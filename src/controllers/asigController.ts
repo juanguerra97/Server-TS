@@ -80,7 +80,7 @@ class AsigController{
                 status: 400,
                 message: "Ocurrió un error",
                 error:{
-                    message: ""+error
+                    message: error.message
                 }
             });
         }
