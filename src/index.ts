@@ -9,6 +9,7 @@ import catedraticosRoutes from './routes/catedraticosRoutes';
 import cursosPensumsRoutes from './routes/cursosPensumsRoutes';
 //import asignaciones from './routes/asignacionesRoutes';
 import asigRoutes from './routes/asigRoutes';
+import reporte3Routes from './routes/reportecantidadcursoRoutes'; 
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -46,6 +47,7 @@ class Server{
         this.app.use('/cruds/cursosPensums', cursosPensumsRoutes);
         //this.app.use('/cruds/asignaciones', asignaciones);
         this.app.use('/cruds/asignaciones', asigRoutes);
+        this.app.use('/reportes/reporte3',reporte3Routes);
     }
 
     iniciar():void{
