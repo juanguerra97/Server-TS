@@ -158,6 +158,7 @@ create table bot_asignaciones(
     hora_inicio time not null,
     hora_fin time not null,
     constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_curso, za_dia),
+    constraint UK_profesor_en_seccion_y_dia UNIQUE(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_profesor, za_dia),
     constraint FK_asignaciones_a_pensums foreign key(za_carrera, ano_pensum, za_curso)
 				references bot_cursos_pensums(za_carrera, ano_pensum, za_curso),
 	constraint FK_asignaciones_a_catedraticos foreign key(za_profesor)
