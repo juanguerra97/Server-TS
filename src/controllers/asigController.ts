@@ -50,8 +50,8 @@ class AsigController{
             const rows = await pool.query(
             `SELECT A.za_carrera, A.ano_pensum, A.za_jornada, 
                 A.ano, A.no_semestre, A.seccion,
-                A.za_curso, CU.nombre_curso, 
-                A.za_profesor, CA.nombres, CA.apellidos,
+                A.za_curso, CU.nombre_curso, CU.usa_laboratorio, CU.activo AS curso_activo,
+                A.za_profesor, CA.nombres, CA.apellidos, CA.profesion, CA.activo AS profesor_activo,
                 A.za_dia, D.dia, 
                 hora_inicio,hora_fin
             FROM bot_asignaciones A
@@ -80,7 +80,7 @@ class AsigController{
                 status: 400,
                 message: "Ocurrió un error",
                 error:{
-                    message: ""+error
+                    message: error.message
                 }
             });
         }
@@ -212,7 +212,6 @@ class AsigController{
                 message: "Se actualizó una asignación"
             });
         }catch(error){
-
             error = error.message;
             if(DupErrorRegex.test(error)){
                 error = "Datos duplicados";

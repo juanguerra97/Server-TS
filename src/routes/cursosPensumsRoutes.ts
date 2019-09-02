@@ -11,6 +11,7 @@ class CursosPensumsRoutes{
     }
 
     config():void{
+        this.router.get('/',cursosPensumsController.getAllCursosByPensumAndCiclo);
         this.router.get('/:za_carrera/:ano_pensum', cursosPensumsController.getAllCursosPensums);
         this.router.get('/:za_carrera/:ano_pensum/:za_curso', cursosPensumsController.getUnoCursosPensums);
         this.router.post('/', cursosPensumsController.opcionesCursosPensums);

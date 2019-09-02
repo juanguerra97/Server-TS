@@ -18,6 +18,56 @@ class CursosPensumsController{
         res.json({text: "Operación realizada exitosamente!!!"});
     }
 
+    public async getAllCursosByPensumAndCiclo(req:Request, res:Response){
+        
+        try{
+
+            if(req.query.za_carrera == undefined){
+                throw {message:"Falta parametro za_carrera"};
+            }
+
+            if(req.query.ano_pensum == undefined){
+                throw {message:"Falta parametro ano_pensum"};
+            }
+
+            if(req.query.ciclo == undefined){
+                throw {message:"Falta parametro ciclo"};
+            }
+
+            // for(let parametro in ['za_carrera','ano_pensum','ciclo'].values()){
+            //     if(req.query[parametro] == undefined){
+            //         throw {message:"Falta parametro " + parametro};
+            //     }
+            // }
+
+            const rows = await pool.query(
+                `SELECT C.za_curso,C.nombre_curso,C.usa_laboratorio,C.activo 
+                FROM bot_cursos C JOIN bot_cursos_pensums CP 
+                ON C.za_curso = CP.za_curso 
+                WHERE CP.za_carrera = ${req.query.za_carrera} AND 
+                    CP.ano_pensum = ${req.query.ano_pensum} AND 
+                    CP.ciclo = ${req.query.ciclo}`);
+            
+            res.json({
+                status: 200,
+                message: "OK",
+                data: rows[0]
+            });
+
+        }catch(error){
+            error = error.message;
+
+            res.json({
+                status: 400,
+                message: "Ocurrió un error",
+                error:{
+                    message: error
+                }
+            });
+        }
+
+    }
+
 }
 
 const cursosPensumsController = new CursosPensumsController();

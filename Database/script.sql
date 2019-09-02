@@ -749,7 +749,7 @@ create procedure cos_bot_pensums(
 )
 begin
 
-	if(ano_pen = 1)
+	if(ano_pen = 0)
     then
 		select
 			pen.za_carrera,
@@ -834,6 +834,73 @@ begin
 			cur.za_carrera = za_carre and
             cur.ano_pensum = ano_pen and
             cur.za_curso = za_cur;
+    end if;
+
+end//;
+
+delimiter //
+
+delimiter //
+
+create trigger tr_bot_asignaciones
+	before insert on bot_asignaciones
+    for each row
+begin
+	if (
+		(select
+			count(*)
+		from
+			bot_asignaciones as asig
+		where
+			asig.za_carrera = new.za_carrera and
+            asig.ano_pensum = new.ano_pensum and
+            asig.za_jornada = new.za_jornada and
+            asig.ano = new.ano and
+            asig.no_semestre = new.no_semestre and
+            asig.seccion = new.seccion and
+            asig.za_dia = new.za_dia) >= 5
+    )
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error, No pueden existir más de 5 cursos por jornada en el día.';
+	elseif(
+		(
+			select
+				count(asig.za_profesor)
+			from
+				bot_asignaciones as asig
+			where
+				asig.za_carrera = new.za_carrera and
+                asig.ano_pensum = new.ano_pensum and
+                asig.za_jornada = new.za_jornada and
+                asig.ano = new.ano and
+                asig.no_semestre = new.no_semestre and
+                asig.za_dia = new.za_dia and
+                asig.seccion = new.seccion and
+                asig.za_profesor = new.za_profesor
+        ) > 1
+    )
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error, El mismo catedrático no puede tener 2 cursos en la misma sección.';
+	/*elseif(
+		(
+			select
+				count(*)
+			from
+				bot_asignaciones as asig
+			where
+				asig.za_carrera = new.za_carrera and
+                asig.ano_pensum = new.ano_pensum and
+                asig.ano = new.ano and
+                asig.no_semestre = new.no_semestre and
+                asig.za_profesor = new.za_profesor
+        ) >= 5
+    )
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error, Un catedrático no puede tener más de 6 cursos.';
+        Esto todavia no esta*/
     end if;
 
 end//;
