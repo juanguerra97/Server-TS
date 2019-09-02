@@ -212,7 +212,6 @@ class AsigController{
                 message: "Se actualizó una asignación"
             });
         }catch(error){
-
             error = error.message;
             if(DupErrorRegex.test(error)){
                 error = "Datos duplicados";

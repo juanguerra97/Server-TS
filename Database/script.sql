@@ -839,3 +839,32 @@ begin
 end//;
 
 delimiter //
+
+delimiter //
+
+create trigger tr_bot_asignaciones
+	before insert on bot_asignaciones
+    for each row
+begin
+	if (
+		(select
+			count(*)
+		from
+			bot_asignaciones as asig
+		where
+			asig.za_carrera = new.za_carrera and
+            asig.ano_pensum = new.ano_pensum and
+            asig.za_jornada = new.za_jornada and
+            asig.ano = new.ano and
+            asig.no_semestre = new.no_semestre and
+            asig.seccion = new.seccion and
+            asig.za_dia = new.za_dia) >= 5
+    )
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error, No pueden existir más de 5 cursos por jornada en el día';
+    end if;
+
+end//;
+
+delimiter //
