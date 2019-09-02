@@ -164,7 +164,8 @@ create table bot_asignaciones(
 	constraint FK_asignaciones_a_catedraticos foreign key(za_profesor)
 				references bot_catedraticos(za_profesor),
 	CONSTRAINT FK_asig_a_diasjornadas FOREIGN KEY(za_carrera,za_jornada,za_dia)
-				REFERENCES bot_dias_jornadas(za_carrera,za_jornada,za_dia)
+				REFERENCES bot_dias_jornadas(za_carrera,za_jornada,za_dia),
+	CONSTRAINT CK_horario CHECK(hora_inicio < hora_fin)
 );
 
 -- bot_usuarios
