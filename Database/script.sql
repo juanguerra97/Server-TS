@@ -159,6 +159,7 @@ create table bot_asignaciones(
     hora_fin time not null,
     constraint PK_asignaciones primary key(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_curso, za_dia),
     constraint UK_profesor_en_seccion_y_dia UNIQUE(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_profesor, za_dia),
+    constraint UK_hora_inicio_en_dia UNIQUE(za_carrera,ano_pensum,za_jornada,ano,no_semestre,seccion,za_dia,hora_inicio), 
     constraint FK_asignaciones_a_pensums foreign key(za_carrera, ano_pensum, za_curso)
 				references bot_cursos_pensums(za_carrera, ano_pensum, za_curso),
 	constraint FK_asignaciones_a_catedraticos foreign key(za_profesor)
@@ -839,54 +840,209 @@ begin
 
 end//;
 
-delimiter //
+delimiter ;
+
+
+##############################################################################################
+################### FUNCIONES ################################################################
+##############################################################################################
+
+DROP FUNCTION IF EXISTS numcursoscatedraticoenjornada;
+DELIMITER //
+# Funcion para saber el numero de cursos diferentes a cierto curso
+# que un catedratico tiene asignados en una jornada
+CREATE FUNCTION numcursoscatedraticoenjornada(
+	za_carrer int,
+    ano_pen int,
+    za_jor int,
+    an int,
+    no_semes int,
+    za_cur int,
+    za_prof int
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE numcursos INT DEFAULT 0;
+    SELECT COUNT(*) INTO numcursos FROM (SELECT COUNT(*)
+	FROM bot_asignaciones 
+    WHERE za_carrera = za_carrer AND
+		ano_pensum = ano_pen AND
+        za_jornada = za_jor AND
+        ano = an AND
+        no_semestre MOD 2 = no_semes MOD 2 AND
+        za_curso != za_cur AND
+        za_profesor = za_prof
+    GROUP BY za_carrera,ano_pensum,za_jornada,ano,no_semestre,za_curso,za_profesor) SUB;
+    
+    RETURN numcursos;
+END//
+DELIMITER ;
+
+
+#######---------------------------------------------------------------##########
+DROP FUNCTION IF EXISTS catedraticodecurso;
+DELIMITER //
+# Funcion para saber el catedratico que da un curso en cierta seccion
+CREATE FUNCTION catedraticodecurso(
+	za_carrer int,
+    ano_pen int,
+    za_jor int,
+    an int,
+    no_semes int,
+    sec VARCHAR(2),
+    za_cur int
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE za_prof INT DEFAULT 0;
+    SELECT DISTINCT za_profesor INTO za_prof
+    FROM bot_asignaciones
+    WHERE za_carrera = za_carrer AND
+		ano_pensum = ano_pen AND
+        za_jornada = za_jor AND
+        ano = an AND
+        no_semestre MOD 2 = no_semes MOD 2 AND
+        seccion = sec AND
+        za_curso = za_cur;
+    
+    RETURN za_prof;
+END//
+DELIMITER ;
+
+#######---------------------------------------------------------------##########
+DROP FUNCTION IF EXISTS numcursosdiferentesdecatedraticoenseccion;
+DELIMITER //
+# Funcion para saber el numero de cursos diferentes a cierto curso
+# que un catedratico tiene asignados para una seccion en especifico
+CREATE FUNCTION numcursosdiferentesdecatedraticoenseccion(
+	za_carrer int,
+    ano_pen int,
+    za_jor int,
+    an int,
+    no_semes int,
+    sec VARCHAR(2),
+    za_cur int,
+    za_prof int
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE numcursos INT DEFAULT 0;
+    
+    SELECT COUNT(DISTINCT za_curso) INTO numcursos 
+    FROM (
+		SELECT za_curso 
+        FROM bot_asignaciones 
+		WHERE za_carrera = za_carrer AND
+			ano_pensum = ano_pen AND
+			za_jornada = za_jor AND
+			ano = an AND
+			no_semestre = no_semes AND
+			seccion = sec AND
+			za_curso != za_cur AND 
+			za_profesor = za_prof 
+		GROUP BY za_curso
+    ) SUB;
+    
+    RETURN numcursos;
+END//
+DELIMITER ;
+
+#######---------------------------------------------------------------##########
+DROP FUNCTION IF EXISTS numcursosdiferentesensecciondia;
+DELIMITER //
+# Funcion para saber el numero de cursos diferentes asignados
+# en un dia para una seccion en especifico
+CREATE FUNCTION numcursosdiferentesensecciondia(
+	za_carrer int,
+    ano_pen int,
+    za_jor int,
+    an int,
+    no_semes int,
+    sec VARCHAR(2),
+    za_di int
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE numcursos INT DEFAULT 0;
+    
+    
+		SELECT COUNT(DISTINCT za_curso) INTO numcursos  
+        FROM (SELECT za_curso FROM bot_asignaciones 
+		WHERE za_carrera = za_carrer AND
+		ano_pensum = ano_pen AND
+		za_jornada = za_jor AND
+		ano = an AND
+		no_semestre = no_semes AND
+		seccion = sec AND
+        za_dia = za_di
+		GROUP BY za_curso) SUB;
+    
+    RETURN numcursos;
+END//
+DELIMITER ;
+
+#######---------------------------------------------------------------##########
+DROP FUNCTION IF EXISTS numcursosdiferentesenseccionjornada;
+DELIMITER //
+# Funcion para saber el numero de cursos diferentes a cierto curso
+# asignados en una jornada para una seccion en especifico
+CREATE FUNCTION numcursosdiferentesenseccionjornada(
+	za_carrer int,
+    ano_pen int,
+    za_jor int,
+    an int,
+    no_semes int,
+    sec VARCHAR(2),
+    za_cur int
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE numcursos INT DEFAULT 0;
+    
+    
+		SELECT COUNT(DISTINCT za_curso) INTO numcursos  
+        FROM (
+			SELECT za_curso FROM bot_asignaciones 
+			WHERE za_carrera = za_carrer AND
+				ano_pensum = ano_pen AND
+				za_jornada = za_jor AND
+				ano = an AND
+				no_semestre = no_semes AND
+				seccion = sec AND
+                za_curso != za_cur
+			GROUP BY za_curso
+		) SUB;
+    
+    RETURN numcursos;
+END//
+DELIMITER ;
+
+########################################################################################
+######################### TRIGGERS ####################################################
+########################################################################################
+
+DROP TRIGGER IF EXISTS tr_bot_asignaciones;
 
 delimiter //
-
 create trigger tr_bot_asignaciones
 	before insert on bot_asignaciones
     for each row
 begin
 
 	DECLARE catdecurso INT DEFAULT 0;
-
-	if (
-		(select
-			count(*)
-		from
-			bot_asignaciones as asig
-		where
-			asig.za_carrera = new.za_carrera and
-            asig.ano_pensum = new.ano_pensum and
-            asig.za_jornada = new.za_jornada and
-            asig.ano = new.ano and
-            asig.no_semestre = new.no_semestre and
-            asig.seccion = new.seccion and
-            asig.za_dia = new.za_dia) >= 5
-    )
+	
+    # test para verificar que en un día no se asignen más de 5 cursos por seccion
+	if (numcursosdiferentesensecciondia(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_dia) >= 5)
     then
 		SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error, No pueden existir más de 5 cursos por jornada en el día.';
-	elseif(
-		(
-			select
-				count(asig.za_profesor)
-			from
-				bot_asignaciones as asig
-			where
-				asig.za_carrera = new.za_carrera and
-                asig.ano_pensum = new.ano_pensum and
-                asig.za_jornada = new.za_jornada and
-                asig.ano = new.ano and
-                asig.no_semestre = new.no_semestre and
-                asig.za_dia = new.za_dia and
-                asig.seccion = new.seccion and
-                asig.za_profesor = new.za_profesor
-        ) > 1
-    )
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSENDIA';
+        
+	# test para verificar que en una jornada no se asignen más de 5 cursos por seccion
+	elseif(numcursosdiferentesenseccionjornada(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso) >= 5)
     then
 		SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error, El mismo catedrático no puede tener 2 cursos en la misma sección.';
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSENJORNADA';
+        
+    # test para verificar que no se asigne mas de un curso en una seccion a un catedratio    
+	elseif(numcursosdiferentesdecatedraticoenseccion(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso,NEW.za_profesor) >= 1)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MISMOCATENSECCION';
 	/*elseif(
 		(
 			select
@@ -908,7 +1064,7 @@ begin
     
     # test para validar que un catedratico no se asigne más de 3 cursos por jornada
 	elseif(numcursoscatedraticoenjornada(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,
-				NEW.ano,NEW.no_semestre,NEW.za_profesor) >= 3)
+				NEW.ano,NEW.no_semestre,NEW.za_curso,NEW.za_profesor) >= 3)
     then
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'ERR_MAXCURSOSCATEDRATICOENJORNADA';
@@ -928,4 +1084,76 @@ begin
 
 end//;
 
+delimiter ;
+
+####-----------------------------------------------------##################
+
+DROP TRIGGER IF EXISTS tr_bfupdate_asignaciones;
+
 delimiter //
+create trigger tr_bfupdate_asignaciones
+	before update on bot_asignaciones
+    for each row
+begin
+
+	DECLARE catdecurso INT DEFAULT 0;
+	
+    # test para verificar que en un día no se asignen más de 5 cursos por seccion
+	if (numcursosdiferentesensecciondia(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_dia) >= 5)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSENDIA';
+        
+	# test para verificar que en una jornada no se asignen más de 5 cursos por seccion
+	elseif(numcursosdiferentesenseccionjornada(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso) >= 5)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSENJORNADA';
+        
+    # test para verificar que no se asigne mas de un curso en una seccion a un catedratio    
+	elseif(numcursosdiferentesdecatedraticoenseccion(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso,NEW.za_profesor) >= 1)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MISMOCATENSECCION';
+	/*elseif(
+		(
+			select
+				count(*)
+			from
+				bot_asignaciones as asig
+			where
+				asig.za_carrera = new.za_carrera and
+                asig.ano_pensum = new.ano_pensum and
+                asig.ano = new.ano and
+                asig.no_semestre = new.no_semestre and
+                asig.za_profesor = new.za_profesor
+        ) >= 5
+    )
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error, Un catedrático no puede tener más de 6 cursos.';
+        Esto todavia no esta*/
+    
+    # test para validar que un catedratico no se asigne más de 3 cursos por jornada
+	elseif(numcursoscatedraticoenjornada(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,
+				NEW.ano,NEW.no_semestre,NEW.za_curso,NEW.za_profesor) >= 3)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSCATEDRATICOENJORNADA';
+        
+	
+    else
+
+		SET catdecurso = catedraticodecurso(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso);
+        
+        # test para validar que no se asigne mas de un catedratico al mismo curso en diferentes dias
+		if(catdecurso != 0 AND catdecurso != NEW.za_profesor) then
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'ERR_CATDECURSODIFERENTE';
+		end if;
+    
+    end if;
+
+end//;
+
+delimiter ;
