@@ -21,7 +21,7 @@ create table bot_carreras(
     nombre_carrera varchar(100) not null,
     activo bit,
     constraint PK_za_carrera primary key(za_carrera),
-    unique(za_carrera)
+    constraint UK_nombre_carrera unique(nombre_carrera)
 );
 
 -- bot_jornadas
@@ -36,7 +36,7 @@ create table bot_jornadas(
     constraint PK_za_jornada primary key(za_carrera,za_jornada),
     constraint FK_jornadas_carreras foreign key(za_carrera)
 				references bot_carreras(za_carrera),
-	unique(za_carrera,za_jornada)
+	constraint UK_nombre_jornada unique(za_carrera,nombre_jornada)
 );
 
 -- bot_dias_jornadas
@@ -52,7 +52,7 @@ create table bot_dias_jornadas(
     constraint PK_za_dia primary key(za_carrera, za_jornada, za_dia),
     constraint FK_dias_a_jornadas foreign key(za_carrera,za_jornada)
 				references bot_jornadas(za_carrera,za_jornada),
-	unique(za_carrera, za_jornada, za_dia)
+	constraint UK_dia unique(za_carrera, za_jornada, dia)
 );
 
 /*-- bot_horarios
@@ -82,7 +82,8 @@ create table bot_pensums(
     ano_pensum int not null,
     codigo_pensum varchar(10) not null,
     activo bit not null,
-    constraint PK_ano_pensum primary key(za_carrera, ano_pensum)
+    constraint PK_ano_pensum primary key(za_carrera, ano_pensum),
+    constraint UK_codigo_pensum unique(za_carrera,codigo_pensum)
 );
 
 -- bot_cursos
@@ -95,7 +96,7 @@ create table bot_cursos(
     usa_laboratorio bit not null,
     activo bit not null,
     constraint PK_za_curso primary key(za_curso),
-    unique(za_curso)
+    constraint UK_nombre_curso unique(nombre_curso)
 );
 
 -- bot_cursos_pensum
