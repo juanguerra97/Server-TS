@@ -93,7 +93,7 @@ from bot_cursos
 	join bot_cursos_pensums on bot_cursos_pensums.za_curso = bot_cursos.za_curso
 	join bot_asignaciones on bot_asignaciones.za_curso = bot_cursos_pensums.za_curso
 	join bot_catedraticos on bot_catedraticos.za_profesor = bot_asignaciones.za_profesor
-	group by bot_catedraticos.nombres order by count(bot_asignaciones.za_curso) desc;
+	group by bot_catedraticos.za_profesor order by count(bot_asignaciones.za_curso) desc;
 
 end//;
 
