@@ -6,12 +6,11 @@ const DupErrorRegex:RegExp = /^ER_DUP_ENTRY:.*$/;
 const KEY_ASIG_PROPS = [
     'za_carrera','ano_pensum','za_jornada',
     'ano','no_semestre','seccion',
-    'za_curso','za_profesor',
-    'za_dia','hora_inicio'
+    'za_curso','za_dia',
 ];
 
 const All_ASIG_PROPS = [
-    ...KEY_ASIG_PROPS,'hora_fin'
+    ...KEY_ASIG_PROPS,'za_profesor','hora_inicio','hora_fin'
 ];
 
 const UPD_ASIG_PROPS = [
@@ -118,7 +117,7 @@ class AsigController{
                 message: "Se insertó un nueva asignación"
             });
         }catch(error){
-            
+            console.log("**ERROR INSERCION: "+error.message);
             error = error.message;
             if(DupErrorRegex.test(error)){
                 error = "Datos duplicados";
@@ -151,15 +150,14 @@ class AsigController{
                  ano=${asig.ano} AND
                  no_semestre=${asig.no_semestre} AND
                  za_curso=${asig.za_curso} AND 
-                 za_profesor=${asig.za_profesor} AND 
-                 za_dia=${asig.za_dia} AND
-                 hora_inicio='${asig.hora_inicio}'`);
+                 za_dia=${asig.za_dia}`);
 
             res.json({
                 status: 200,
                 message: "Se eliminó una asignación"
             });
         }catch(error){
+            console.log("**ERROR BORRADO: " + error.message);
             res.json({
                 status: 400,
                 message: "Ocurrió un error",
@@ -202,10 +200,8 @@ class AsigController{
                     ano=${old.ano} AND 
                     no_semestre=${old.no_semestre} AND
                     seccion='${old.seccion}' AND
-                    za_curso=${old.za_curso} AND 
-                    za_profesor=${old.za_profesor} AND
-                    za_dia=${old.za_dia} AND
-                    hora_inicio='${old.hora_inicio}'`);
+                    za_curso=${old.za_curso} AND
+                    za_dia=${old.za_dia}`);
         
             res.json({
                 status: 200,
