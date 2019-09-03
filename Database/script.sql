@@ -848,6 +848,9 @@ create trigger tr_bot_asignaciones
 	before insert on bot_asignaciones
     for each row
 begin
+
+	DECLARE catdecurso INT DEFAULT 0;
+
 	if (
 		(select
 			count(*)
@@ -903,6 +906,25 @@ begin
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error, Un catedrático no puede tener más de 6 cursos.';
         Esto todavia no esta*/
+    
+    # test para validar que un catedratico no se asigne más de 3 cursos por jornada
+	elseif(numcursoscatedraticoenjornada(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,
+				NEW.ano,NEW.no_semestre,NEW.za_profesor) >= 3)
+    then
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERR_MAXCURSOSCATEDRATICOENJORNADA';
+        
+	
+    else
+			
+		SET catdecurso = catedraticodecurso(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso);
+        
+        # test para validar que no se asigne mas de un catedratico al mismo curso en diferentes dias
+		if(catdecurso != 0 AND catdecurso != NEW.za_profesor) then
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'ERR_CATDECURSODIFERENTE';
+		end if;
+    
     end if;
 
 end//;
