@@ -12,7 +12,7 @@ import asigRoutes from './routes/asigRoutes';
 import reporte3Routes from './routes/reportecantidadcursoRoutes'; 
 import morgan from 'morgan';
 import cors from 'cors';
-
+import reporte2Routes from './routes/reportecatedraticosRoutes';
 import path from 'path';
 
 class Server{
@@ -58,9 +58,7 @@ class Server{
         //this.app.use('/cruds/asignaciones', asignaciones);
         this.app.use('/cruds/asignaciones', asigRoutes);
         this.app.use('/reportes/reporte3',reporte3Routes);
-
-
-        
+        this.app.use('/reportes/reporte2',reporte2Routes);
         this.app.get('/', function(req, res) {
             res.sendFile(path.join(__dirname));
         });
