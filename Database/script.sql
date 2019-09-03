@@ -915,8 +915,8 @@ begin
         
 	
     else
-			
-		SET catdecurso = catedraticodecurso();
+
+		SET catdecurso = catedraticodecurso(NEW.za_carrera,NEW.ano_pensum,NEW.za_jornada,NEW.ano,NEW.no_semestre,NEW.seccion,NEW.za_curso);
         
         # test para validar que no se asigne mas de un catedratico al mismo curso en diferentes dias
 		if(catdecurso != 0 AND catdecurso != NEW.za_profesor) then
