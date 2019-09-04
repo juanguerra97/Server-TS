@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../db';
 
-const DupErrorRegex:RegExp = /^ER_DUP_ENTRY:.*$/;
+const ErrorRegex:RegExp = /^ER_(DUP_ENTRY|SIGNAL_EXCEPTION):.*(for key '(.*)'|ERR_(.*)).*$/g;
 
 const KEY_ASIG_PROPS = [
     'za_carrera','ano_pensum','za_jornada',
@@ -119,9 +119,39 @@ class AsigController{
             });
         }catch(error){
             console.log("**ERROR INSERCION: "+error.message);
+
             error = error.message;
-            if(DupErrorRegex.test(error)){
-                error = "Datos duplicados";
+            let matchError:any = Array.from(error.matchAll(ErrorRegex));
+            if(matchError.length > 0){
+                console.log('Hubo match: ' + matchError[0][1]);
+
+                if(matchError[0][1] == 'DUP_ENTRY'){
+                    console.log('Tipo: ' + matchError[0][3]);console.log('Tipo: ' + matchError[0][3]);
+
+                    if(matchError[0][3] == 'PRIMARY'){
+                        error = 'El curso ya se asigno en este dia';
+                    } else if(matchError[0][3] == 'UK_profesor_en_seccion_y_dia'){
+                        error = 'El profesor ya tiene asignado un curso en este dia';
+                    } else if(matchError[0][3] == 'UK_hora_inicio_en_dia'){
+                        error = 'Ya existe un curso asignado en esta hora del dia';
+                    }
+
+                }else { // error de tipo SIGNAL_EXCEPTION
+                    console.log('Tipo: ' + matchError[0][4]);
+
+                    if(matchError[0][4] == 'MAXCURSOSENDIA'){
+                        error = 'Ya se asigno el maximo de cursos permitidos por seccion en un dia';
+                    } else if(matchError[0][4] == 'MAXCURSOSENJORNADA'){
+                        error = 'Ya se asigno el maximo de cursos permitidos por seccion en una jornada';
+                    } else if(matchError[0][4] == 'MISMOCATENSECCION'){
+                        error = 'El catedratico ya tiene asignado otro curso en esta seccion';
+                    } else if(matchError[0][4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
+                        error = 'El catedratico ya tiene asignado el numero maximo de cursos por jornada';
+                    } else { // CATDECURSODIFERENTE
+                        error = 'Este curso ya tiene asignado otro catedratico';
+                    }
+                }
+                //error = "Datos duplicados";
             }
             res.json({
                 status: 400,
@@ -210,7 +240,7 @@ class AsigController{
             });
         }catch(error){
             error = error.message;
-            if(DupErrorRegex.test(error)){
+            if(ErrorRegex.test(error)){
                 error = "Datos duplicados";
             }
             res.json({
