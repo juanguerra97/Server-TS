@@ -787,10 +787,11 @@ begin
 
 end//;
 
-delimiter //
+delimiter ;
 
-delimiter //
 
+drop procedure if exists cos_bot_cursos_pensums;
+delimiter //
 create procedure cos_bot_cursos_pensums(
 	in za_carre int,
     in ano_pen int,
@@ -806,7 +807,10 @@ begin
             cur.ano_pensum,
             cur.ciclo,
             cur.activo,
-            curr.nombre_curso
+            curr.codigo_curso,
+            curr.nombre_curso,
+            curr.usa_laboratorio,
+            curr.activo as curso_activo
 		from
 			bot_cursos_pensums as cur 
             
@@ -825,7 +829,10 @@ begin
             cur.ano_pensum,
             cur.ciclo,
             cur.activo,
-            curr.nombre_curso
+            curr.codigo_curso,
+            curr.nombre_curso,
+            curr.usa_laboratorio,
+            curr.activo as curso_activo
 		from
 			bot_cursos_pensums as cur 
             
