@@ -18,9 +18,9 @@ class LoginController{
                 FROM bot_usuarios 
                 WHERE usuario = '${req.body.usuario}'`
             );
-            console.log("ROWS: "+JSON.stringify(rows));
-            if(rows){
-                const user = rows[0];
+            
+            if(rows[0].length > 0){
+                const user = rows[0][0];
                 if(user.usuario == req.body.usuario && user.contrasena == req.body.contrasena){
                     
                     const token = jwt.sign({
@@ -31,8 +31,6 @@ class LoginController{
                     {
                         expiresIn: '1d'
                     });
-
-                    console.log('Token: ' + token);
 
                     res.json({
                         status: 200,
