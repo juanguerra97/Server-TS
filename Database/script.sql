@@ -21,6 +21,7 @@ create table bot_carreras(
     nombre_carrera varchar(100) not null,
     activo bit,
     constraint PK_za_carrera primary key(za_carrera),
+    constraint UK_codigo_carrera unique(codigo_carrera),
     constraint UK_nombre_carrera unique(nombre_carrera)
 );
 
