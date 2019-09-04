@@ -14,6 +14,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import reporte2Routes from './routes/reportecatedraticosRoutes';
 import path from 'path';
+import loginRoutes from './routes/loginRoutes';
 
 class Server{
 
@@ -59,9 +60,13 @@ class Server{
         this.app.use('/cruds/asignaciones', asigRoutes);
         this.app.use('/reportes/reporte3',reporte3Routes);
         this.app.use('/reportes/reporte2',reporte2Routes);
+        this.app.use('/login',loginRoutes);
+
+
         this.app.get('/', function(req, res) {
             res.sendFile(path.join(__dirname));
         });
+        
     }
 
     iniciar():void{
