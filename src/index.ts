@@ -15,6 +15,7 @@ import cors from 'cors';
 import reporte2Routes from './routes/reportecatedraticosRoutes';
 import path from 'path';
 import loginRoutes from './routes/loginRoutes';
+import checkAuth from './middleware/check-auth';
 
 class Server{
 
@@ -39,6 +40,9 @@ class Server{
 
     routes():void{
         //this.app.use(indexRoutes);
+        this.app.use('/login',loginRoutes);
+
+        this.app.use(checkAuth);
         this.app.use('/cruds/carreras', carrerasRoutes);
         this.app.use('/cruds/jornadas', jornadasRoutes);
         this.app.use('/cruds/diasjornadas', diasJornadasRoutes);
@@ -50,7 +54,7 @@ class Server{
         this.app.use('/cruds/asignaciones', asigRoutes);
         this.app.use('/reportes/reporte3',reporte3Routes);
         this.app.use('/reportes/reporte2',reporte2Routes);
-        this.app.use('/login',loginRoutes);
+        
     }
 
     iniciar():void{
