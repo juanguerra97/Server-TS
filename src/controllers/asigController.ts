@@ -71,17 +71,15 @@ class AsigController{
             //     AND A.seccion = '${req.query.seccion}'`);
         res.json({
             status: 200,
-            message: "OK",
+            message: "Asignaciones",
             data: rows[0]
         });
 
         }catch(error){
             res.json({
                 status: 400,
-                message: "Ocurrió un error",
-                error:{
-                    message: error.message
-                }
+                message: "No se pudieron obtener las asignaciones",
+                error:error.message
             });
         }
         
@@ -115,7 +113,7 @@ class AsigController{
             //         ${nueva.za_dia},'${nueva.hora_inicio}','${nueva.hora_fin}',1)`);
             res.json({
                 status: 200,
-                message: "Se insertó un nueva asignación"
+                message: "Se guardó la asignación"
             });
         }catch(error){
             console.log("**ERROR INSERCION: "+error.message);
@@ -155,10 +153,8 @@ class AsigController{
             }
             res.json({
                 status: 400,
-                message: "Ocurrió un error",
-                error:{
-                    message: ""+error
-                }
+                message: "No se pudo guardar la asignacion",
+                error
             });
         }
     }
@@ -191,10 +187,8 @@ class AsigController{
             console.log("**ERROR BORRADO: " + error.message);
             res.json({
                 status: 400,
-                message: "Ocurrió un error",
-                error:{
-                    message: ""+error.message
-                }
+                message: "No se pudo eliminar la asignacion",
+                error:error.message
             });
         }
     }
@@ -236,19 +230,48 @@ class AsigController{
         
             res.json({
                 status: 200,
-                message: "Se actualizó una asignación"
+                message: "Se guardaron los cambios"
             });
         }catch(error){
+            console.log("**ERROR ACTUALIZACION: "+error.message);
+
             error = error.message;
-            if(ErrorRegex.test(error)){
-                error = "Datos duplicados";
+            let matchError:any = Array.from(error.matchAll(ErrorRegex));
+            if(matchError.length > 0){
+                console.log('Hubo match: ' + matchError[0][1]);
+
+                if(matchError[0][1] == 'DUP_ENTRY'){
+                    console.log('Tipo: ' + matchError[0][3]);console.log('Tipo: ' + matchError[0][3]);
+
+                    if(matchError[0][3] == 'PRIMARY'){
+                        error = 'El curso ya se asigno en este dia';
+                    } else if(matchError[0][3] == 'UK_profesor_en_seccion_y_dia'){
+                        error = 'El profesor ya tiene asignado un curso en este dia';
+                    } else if(matchError[0][3] == 'UK_hora_inicio_en_dia'){
+                        error = 'Ya existe un curso asignado en esta hora del dia';
+                    }
+
+                }else { // error de tipo SIGNAL_EXCEPTION
+                    console.log('Tipo: ' + matchError[0][4]);
+
+                    if(matchError[0][4] == 'MAXCURSOSENDIA'){
+                        error = 'Ya se asigno el maximo de cursos permitidos por seccion en un dia';
+                    } else if(matchError[0][4] == 'MAXCURSOSENJORNADA'){
+                        error = 'Ya se asigno el maximo de cursos permitidos por seccion en una jornada';
+                    } else if(matchError[0][4] == 'MISMOCATENSECCION'){
+                        error = 'El catedratico ya tiene asignado otro curso en esta seccion';
+                    } else if(matchError[0][4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
+                        error = 'El catedratico ya tiene asignado el numero maximo de cursos por jornada';
+                    } else { // CATDECURSODIFERENTE
+                        error = 'Este curso ya tiene asignado otro catedratico';
+                    }
+                }
+                //error = "Datos duplicados";
             }
             res.json({
                 status: 400,
-                message: "Ocurrió un error",
-                error:{
-                    message: ""+error
-                }
+                message: "No se pudieron guardar los cambios",
+                error
             });
         }
     }
