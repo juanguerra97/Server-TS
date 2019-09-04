@@ -61,7 +61,8 @@ class AsigController{
                     AND A.za_profesor = CA.za_profesor 
                     AND A.za_carrera = D.za_carrera  
                     AND A.za_jornada = D.za_jornada  
-                    AND A.za_dia = D.za_dia ${whereClause}`);
+                    AND A.za_dia = D.za_dia ${whereClause} 
+            ORDER BY D.dia,hora_inicio`);
             // WHERE A.za_carrera = ${req.query.za_carrera}  
             //     AND A.ano_pensum = ${req.query.ano_pensum} 
             //     AND A.za_jornada = ${req.query.za_jornada} 
