@@ -23,7 +23,7 @@ class LoginController{
                 const user = rows[0][0];
                 if(user.usuario == req.body.usuario && user.contrasena == req.body.contrasena){
                     
-                    if(user.activo.data[0] != 1){
+                    if(user.activo != 1){
                         throw {message:'Usuario inactivo'};
                     }
 
