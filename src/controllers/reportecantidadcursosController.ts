@@ -4,7 +4,7 @@ import pool from '../db';
 class reportecantidadcController{
 
     public async getAllreporte (req:Request, res:Response) {
-        const rows = await pool.query('Call reporte3()');
+        const rows = await pool.query('Call reporte_cursos()');
         res.json(rows[0]);
     }
 
