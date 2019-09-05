@@ -23,6 +23,10 @@ class LoginController{
                 const user = rows[0][0];
                 if(user.usuario == req.body.usuario && user.contrasena == req.body.contrasena){
                     
+                    if(user.activo.data[0] != 1){
+                        throw {message:'Usuario inactivo'};
+                    }
+
                     const token = jwt.sign({
                         za_usuario:user.za_usuario,
                         usuario:user.usuario
