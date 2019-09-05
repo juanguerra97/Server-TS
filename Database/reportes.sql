@@ -62,7 +62,7 @@ from bot_carreras
 	where bot_catedraticos.za_profesor  = codigo_ca
 	and bot_dias_jornadas.za_dia = bot_asignaciones.za_dia
 	and bot_asignaciones.ano = anio
-    and bot_asignaciones.no_semestre = sem
+    and ((bot_asignaciones.no_semestre + 1) MOD 2) + 1 = sem
 	and  bot_catedraticos.activo = 1;
     end if;
 END$$
@@ -77,9 +77,9 @@ DELIMITER ;
 /* reporte NO3 listar los cursos  por catedráticos, la información es: código
 de catedrático, nombre y total de cursos asignados, esta en orden
 descendente por la cantidad de cursos. No hay que mandarle ningun dato*/
-
-delimiter//
 drop procedure  if exists reporte_cursos;
+delimiter //
+
 create procedure reporte_cursos(
 	
 )
@@ -95,6 +95,6 @@ from bot_cursos
 	join bot_catedraticos on bot_catedraticos.za_profesor = bot_asignaciones.za_profesor
 	group by bot_catedraticos.za_profesor order by count(bot_asignaciones.za_curso) desc;
 
-end//;
+end //
 
-delimiter//
+delimiter ;
