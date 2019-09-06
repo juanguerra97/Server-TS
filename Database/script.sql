@@ -807,7 +807,7 @@ begin
             cur.ano_pensum,
             cur.ciclo,
             cur.activo,
-            curr.codigo_curso,
+            curr.za_curso,
             curr.nombre_curso,
             curr.usa_laboratorio,
             curr.activo as curso_activo
@@ -829,7 +829,7 @@ begin
             cur.ano_pensum,
             cur.ciclo,
             cur.activo,
-            curr.codigo_curso,
+            curr.za_curso,
             curr.nombre_curso,
             curr.usa_laboratorio,
             curr.activo as curso_activo
