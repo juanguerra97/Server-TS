@@ -119,31 +119,33 @@ class AsigController{
             console.log("**ERROR INSERCION: "+error.message);
 
             error = error.message;
-            let matchError:any = Array.from(error.matchAll(ErrorRegex));
-            if(matchError.length > 0){
-                console.log('Hubo match: ' + matchError[0][1]);
 
-                if(matchError[0][1] == 'DUP_ENTRY'){
-                    console.log('Tipo: ' + matchError[0][3]);console.log('Tipo: ' + matchError[0][3]);
+            const regex:RegExp = /^ER_(DUP_ENTRY|SIGNAL_EXCEPTION):.*(for key '(.*)'|ERR_(.*)).*$/g;
+            let matchError:any = regex.exec(error);
+            if(matchError){
+                //console.log('Hubo match: ' + matchError[1]);
 
-                    if(matchError[0][3] == 'PRIMARY'){
+                if(matchError[1] == 'DUP_ENTRY'){
+                    //console.log('Tipo: ' + matchError[3]);console.log('Tipo: ' + matchError[3]);
+
+                    if(matchError[3] == 'PRIMARY'){
                         error = 'El curso ya se asigno en este dia';
-                    } else if(matchError[0][3] == 'UK_profesor_en_seccion_y_dia'){
+                    } else if(matchError[3] == 'UK_profesor_en_seccion_y_dia'){
                         error = 'El profesor ya tiene asignado un curso en este dia';
-                    } else if(matchError[0][3] == 'UK_hora_inicio_en_dia'){
+                    } else if(matchError[3] == 'UK_hora_inicio_en_dia'){
                         error = 'Ya existe un curso asignado en esta hora del dia';
                     }
 
                 }else { // error de tipo SIGNAL_EXCEPTION
-                    console.log('Tipo: ' + matchError[0][4]);
+                    //console.log('Tipo: ' + matchError[4]);
 
-                    if(matchError[0][4] == 'MAXCURSOSENDIA'){
+                    if(matchError[4] == 'MAXCURSOSENDIA'){
                         error = 'Ya se asigno el maximo de cursos permitidos por seccion en un dia';
-                    } else if(matchError[0][4] == 'MAXCURSOSENJORNADA'){
+                    } else if(matchError[4] == 'MAXCURSOSENJORNADA'){
                         error = 'Ya se asigno el maximo de cursos permitidos por seccion en una jornada';
-                    } else if(matchError[0][4] == 'MISMOCATENSECCION'){
+                    } else if(matchError[4] == 'MISMOCATENSECCION'){
                         error = 'El catedratico ya tiene asignado otro curso en esta seccion';
-                    } else if(matchError[0][4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
+                    } else if(matchError[4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
                         error = 'El catedratico ya tiene asignado el numero maximo de cursos por jornada';
                     } else { // CATDECURSODIFERENTE
                         error = 'Este curso ya tiene asignado otro catedratico';
@@ -236,31 +238,32 @@ class AsigController{
             console.log("**ERROR ACTUALIZACION: "+error.message);
 
             error = error.message;
-            let matchError:any = Array.from(error.matchAll(ErrorRegex));
-            if(matchError.length > 0){
-                console.log('Hubo match: ' + matchError[0][1]);
+            const regex:RegExp = /^ER_(DUP_ENTRY|SIGNAL_EXCEPTION):.*(for key '(.*)'|ERR_(.*)).*$/g;
+            let matchError:any = regex.exec(error);
+            if(matchError){
+                //console.log('Hubo match: ' + matchError[1]);
 
-                if(matchError[0][1] == 'DUP_ENTRY'){
-                    console.log('Tipo: ' + matchError[0][3]);console.log('Tipo: ' + matchError[0][3]);
+                if(matchError[1] == 'DUP_ENTRY'){
+                    //console.log('Tipo: ' + matchError[3]);console.log('Tipo: ' + matchError[3]);
 
-                    if(matchError[0][3] == 'PRIMARY'){
+                    if(matchError[3] == 'PRIMARY'){
                         error = 'El curso ya se asigno en este dia';
-                    } else if(matchError[0][3] == 'UK_profesor_en_seccion_y_dia'){
+                    } else if(matchError[3] == 'UK_profesor_en_seccion_y_dia'){
                         error = 'El profesor ya tiene asignado un curso en este dia';
-                    } else if(matchError[0][3] == 'UK_hora_inicio_en_dia'){
+                    } else if(matchError[3] == 'UK_hora_inicio_en_dia'){
                         error = 'Ya existe un curso asignado en esta hora del dia';
                     }
 
                 }else { // error de tipo SIGNAL_EXCEPTION
-                    console.log('Tipo: ' + matchError[0][4]);
+                    //console.log('Tipo: ' + matchError[4]);
 
-                    if(matchError[0][4] == 'MAXCURSOSENDIA'){
+                    if(matchError[4] == 'MAXCURSOSENDIA'){
                         error = 'Ya se asigno el maximo de cursos permitidos por seccion en un dia';
-                    } else if(matchError[0][4] == 'MAXCURSOSENJORNADA'){
+                    } else if(matchError[4] == 'MAXCURSOSENJORNADA'){
                         error = 'Ya se asigno el maximo de cursos permitidos por seccion en una jornada';
-                    } else if(matchError[0][4] == 'MISMOCATENSECCION'){
+                    } else if(matchError[4] == 'MISMOCATENSECCION'){
                         error = 'El catedratico ya tiene asignado otro curso en esta seccion';
-                    } else if(matchError[0][4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
+                    } else if(matchError[4] == 'MAXCURSOSCATEDRATICOENJORNADA'){
                         error = 'El catedratico ya tiene asignado el numero maximo de cursos por jornada';
                     } else { // CATDECURSODIFERENTE
                         error = 'Este curso ya tiene asignado otro catedratico';
