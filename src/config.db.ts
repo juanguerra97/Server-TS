@@ -1,6 +1,6 @@
 export default {
     database: {
-        host: 'localhost',
+        host: '192.168.10.10',
         //host: 'mysqldev.cwveojqnk2sk.us-east-1.rds.amazonaws.com',
         //host:'mysqlumg.cwveojqnk2sk.us-east-1.rds.amazonaws.com',
         user: 'usuario',
