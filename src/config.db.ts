@@ -1,7 +1,7 @@
 export default {
     database: {
-        host: 'localhost',
-        //host: 'mysqldev.cwveojqnk2sk.us-east-1.rds.amazonaws.com',
+        //host: 'localhost',
+        host: 'mysqldev.cwveojqnk2sk.us-east-1.rds.amazonaws.com',
         //host:'mysqlumg.cwveojqnk2sk.us-east-1.rds.amazonaws.com',
         user: 'usuario',
         password: 'usuario',
