@@ -12,8 +12,10 @@ class CarrerasRoutes{
 
     config():void{
         this.router.get('/', carrerasController.getAll);
-        this.router.get('/:za_carrera', carrerasController.get_Carrera);
-        this.router.post('/', carrerasController.opcionesCarrera);
+        this.router.get('/:za_carrera(\\d+)', carrerasController.get_Carrera);
+        this.router.post('/', carrerasController.insert);
+        this.router.delete('/:za_carrera(\\d+)', carrerasController.delete);
+        this.router.put('/:za_carrera(\\d+)', carrerasController.update)
     }
 
 }
