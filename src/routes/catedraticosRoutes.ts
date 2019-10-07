@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import catedraticosController from '../controllers/catedraticosController';
+import checkCamposBody from "../utils";
 
 class CatedraticosRoutes{
 
@@ -12,8 +13,10 @@ class CatedraticosRoutes{
 
     config():void{
         this.router.get('/', catedraticosController.getAllCatedraticos);
-        this.router.get('/:za_profesor', catedraticosController.getUnoCatedraticos);
-        this.router.post('/', catedraticosController.opcionesCatedraticos);
+        this.router.get('/:za_profesor(\\d+)', catedraticosController.getUnoCatedraticos);
+        this.router.post('/', catedraticosController.insert);
+        this.router.delete('/:za_profesor(\\d+)',catedraticosController.delete);
+        this.router.put('/:za_profesor(\\d+)', catedraticosController.update);
     }
 
 }
