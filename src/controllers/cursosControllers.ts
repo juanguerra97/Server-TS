@@ -12,7 +12,7 @@ const CAMPOS_CURSO = [
 
 class CursosController{
 
-    public async getAllCursos (req:Request, res:Response) {
+    public async selectAll (req:Request, res:Response) {
         try {
             const rows = await pool.query('select * from bot_cursos');
             res.json({
@@ -30,7 +30,7 @@ class CursosController{
         }
     }
 
-    public async getUnoCurso (req:Request, res:Response) {
+    public async select (req:Request, res:Response) {
         try{
             const rows = await pool.query('select * from bot_cursos where za_curso = ' + req.params.za_curso);
             let curso = {};
