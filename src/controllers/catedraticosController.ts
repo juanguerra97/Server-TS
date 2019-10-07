@@ -13,7 +13,7 @@ const CAMPOS_CATEDRATICO = [
 
 class CatedraticosController{
 
-    public async getAllCatedraticos (req:Request, res:Response) {
+    public async selectAll (req:Request, res:Response) {
         try{
             const rows = await pool.query('select * from bot_catedraticos');
             res.json({
@@ -31,7 +31,7 @@ class CatedraticosController{
         }
     }
 
-    public async getUnoCatedraticos (req:Request, res:Response) {
+    public async select (req:Request, res:Response) {
         try{
             const rows = await pool.query('select * from bot_catedraticos where za_profesor = ' + req.params.za_profesor);
             let catedratico = {};

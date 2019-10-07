@@ -12,8 +12,8 @@ class CatedraticosRoutes{
     }
 
     config():void{
-        this.router.get('/', catedraticosController.getAllCatedraticos);
-        this.router.get('/:za_profesor(\\d+)', catedraticosController.getUnoCatedraticos);
+        this.router.get('/', catedraticosController.selectAll);
+        this.router.get('/:za_profesor(\\d+)', catedraticosController.select);
         this.router.post('/', catedraticosController.insert);
         this.router.delete('/:za_profesor(\\d+)',catedraticosController.delete);
         this.router.put('/:za_profesor(\\d+)', catedraticosController.update);
