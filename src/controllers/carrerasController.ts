@@ -8,7 +8,8 @@ const KEY_CARRERA_PROPS = [
 
 class CarrerasController{
 
-    public async getAll (req:Request, res:Response) {
+    // Devuelve todas las carreras
+    public async selectAll (req:Request, res:Response) {
 
         try{
 
@@ -32,7 +33,8 @@ class CarrerasController{
 
     }
 
-    public async get_Carrera (req:Request, res:Response) {
+    // Metodo para obtener los datos de una carrera en particular
+    public async select (req:Request, res:Response) {
 
         try{
 
