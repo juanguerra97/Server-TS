@@ -55,14 +55,25 @@ class CursosController{
     public async insert(req:Request, res:Response){
         try{
             let body = req.body;
-            checkCamposBody(req,CAMPOS_CURSO);
+            checkCamposBody(req,['nombre_curso','usa_laboratorio']);
 
-            await pool.query(`INSERT INTO bot_cursos(za_curso,nombre_curso,usa_laboratorio,activo) 
-                VALUES(${body.za_curso},'${body.nombre_curso}',${body.usa_laboratorio},${body.activo})`);
+            if(body.activo == undefined){
+                body.activo = 0;
+            }
+
+
+            const rs = await pool.query(`SELECT ins_curso('${body.nombre_curso}',${body.usa_laboratorio},${body.activo}) as za_curso`);
+            const {za_curso} = rs[0][0];
 
             res.json({
                 status: 200,
-                message: "Se guardo el curso"
+                message: "Se guardo el curso",
+                data: {
+                    za_curso,
+                    nombre_curso: body.nombre_curso,
+                    usa_laboratorio: body.usa_laboratorio,
+                    activo: body.activo
+                }
             });
 
         } catch(error){
@@ -93,12 +104,7 @@ class CursosController{
             let za_curso = req.params.za_curso;
             checkCamposBody(req,CAMPOS_CURSO_MODIFICABLES);
 
-            await pool.query(`UPDATE bot_cursos
-                SET  
-                    nombre_curso = '${body.nombre_curso}',
-                    usa_laboratorio = ${body.usa_laboratorio},
-                    activo = ${body.activo}  
-                WHERE za_curso = ${za_curso}`);
+            await pool.query(`call upd_curso(${za_curso},'${body.nombre_curso}',${body.usa_laboratorio},${body.activo})`);
 
             res.json({
                 status: 200,

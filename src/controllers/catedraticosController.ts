@@ -64,12 +64,20 @@ class CatedraticosController{
                 body.activo = 0;
             }
 
-            await pool.query(`INSERT INTO bot_catedraticos(za_profesor,nombres,apellidos,profesion,activo) 
-                VALUES(${body.za_profesor},'${body.nombres}','${body.apellidos}','${body.profesion}',${body.activo})`);
+            const rs = await pool.query(`SELECT ins_catedratico('${body.nombres}','${body.apellidos}','${body.profesion}',${body.activo}) as za_profesor`);
+            const {za_profesor} = rs[0][0];
+
 
             res.json({
                status: 200,
-               message: "Se guardo el catedratico"
+               message: "Se guardo el catedratico",
+               data: {
+                   za_profesor,
+                   nombres: body.nombres,
+                   apellidos: body.apellidos,
+                   profesion: body.profesion,
+                   activo: body.activo
+               }
             });
 
         } catch(error){
@@ -101,13 +109,7 @@ class CatedraticosController{
             let za_profesor = req.params.za_profesor;
             checkCamposBody(req,CAMPOS_CATEDRATICO_MODIFICABLES);
 
-            await pool.query(`UPDATE bot_catedraticos 
-                SET
-                    nombres = '${body.nombres}', 
-                    apellidos = '${body.apellidos}',
-                    profesion = '${body.profesion}',
-                    activo = ${body.activo} 
-                WHERE za_profesor = ${za_profesor}`);
+            await pool.query(`call upd_catedratico(${za_profesor},'${body.nombres}','${body.apellidos}','${body.profesion}',${body.activo})`);
 
             res.json({
                 status: 200,

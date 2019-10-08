@@ -69,19 +69,25 @@ class CarrerasController{
             let body = req.body;
 
             // se verifica que el body tenga los campos de la carrera
-            checkCamposBody(req,KEY_CARRERA_PROPS);
+            checkCamposBody(req,['codigo_carrera','nombre_carrera']);
 
             // se no se recibe el campo activo, se asume que sera 0
             if(body.activo == undefined){
                 body.activo = 0;
             }
 
-            await pool.query(`INSERT INTO bot_carreras(za_carrera,codigo_carrera,nombre_carrera,activo) 
-                VALUES(${body.za_carrera},'${body.codigo_carrera}','${body.nombre_carrera}',${body.activo})`);
-
+            let rs = await pool.query(`SELECT ins_carrera('${body.codigo_carrera}','${body.nombre_carrera}',${body.activo}) AS za_carrera`);
+            let {za_carrera} = rs[0][0];
+                        
             res.json({
                status: 200,
-               message: "Se guardo la carrera"
+               message: "Se guardo la carrera",
+               data: {
+                   za_carrera,
+                   codigo_carrera: body.codigo_carrera,
+                   nombre_carrera: body.nombre_carrera,
+                   activo: body.activo
+               }
             });
         }catch(error){
             error = error.message;
@@ -118,12 +124,7 @@ class CarrerasController{
             checkCamposBody(req,['codigo_carrera','nombre_carrera','activo']);
 
 
-            await pool.query(`UPDATE bot_carreras 
-                SET 
-                    codigo_carrera = '${body.codigo_carrera}', 
-                    nombre_carrera = '${body.nombre_carrera}',
-                    activo = ${body.activo} 
-                WHERE za_carrera = ${za_carrera}`);
+            await pool.query(`call upd_carrera(${za_carrera},'${body.codigo_carrera}','${body.nombre_carrera}',${body.activo})`);
 
             res.json({
                 status: 200,
