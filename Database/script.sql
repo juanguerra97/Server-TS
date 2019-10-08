@@ -248,10 +248,42 @@ begin
 
 end//;
 
-delimiter //
+delimiter ;
+DROP FUNCTION IF EXISTS ins_carrera;
 
 delimiter //
+create function ins_carrera(
+    cod_carrera varchar(15),
+    name_carrera varchar(100),
+    activ bit
+) RETURNS INT DETERMINISTIC
+begin
+	declare za_carera int default 0;
+	select ifnull(max(za_carrera),0) + 1 into za_carera from bot_carreras;
+	insert into bot_carreras(za_carrera,codigo_carrera,nombre_carrera,activo) 
+		values(za_carera, cod_carrera, name_carrera, activ);
+	return za_carera;
+end//
 
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_carrera;
+
+delimiter //
+create procedure upd_carrera(
+	in za_carera int,
+	in cod_carrera varchar(15),
+    in name_carrera varchar(100),
+    in activ bit)
+begin
+	update bot_carreras
+	set
+		codigo_carrera = cod_carrera,
+		nombre_carrera = name_carrera,
+		activo = activ
+	where za_carrera = za_carera;
+end//
+
+delimiter //
 create procedure sen_bot_jornadas(
 	in za_jor int,
     in za_carre int,
@@ -385,7 +417,42 @@ begin
 
 end//;
 
+delimiter ;
+DROP FUNCTION IF EXISTS ins_curso;
+
 delimiter //
+create function ins_curso(
+    nombre_cur varchar(100),
+    usa_lab bit,
+    activ bit)
+RETURNS INT DETERMINISTIC
+begin
+	declare za_cur int default 0;
+	select ifnull(max(za_curso),0) + 1 into za_cur from bot_cursos;
+    insert into bot_cursos(za_curso,nombre_curso,usa_laboratorio,activo) 
+		values(za_cur,nombre_cur,usa_lab,activ);
+	RETURN za_cur;
+end//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_curso;
+
+delimiter //
+create procedure upd_curso(
+	in za_cur int,
+	in nombre_cur varchar(100),
+    in usa_lab bit,
+    in activ bit)
+begin
+	update bot_cursos
+	set
+		nombre_curso = nombre_cur,
+		usa_laboratorio = usa_lab,
+		activo = activ
+	where za_curso = za_cur;
+end//
+
+
 delimiter //
 create procedure sen_bot_catedraticos(
 	in za_prof int,
@@ -428,10 +495,46 @@ begin
     end if;
 
 end//;
-delimiter //
+
+delimiter ;
+DROP FUNCTION IF EXISTS ins_catedratico;
 
 delimiter //
+CREATE FUNCTION ins_catedratico(
+    nombre varchar(100),
+    apellido varchar(100),
+    profesi varchar(200),
+    activ bit) 
+RETURNS INT DETERMINISTIC
+begin
+	declare za_prof int default 0;
+	select ifnull(max(za_profesor),0) + 1 into za_prof from bot_catedraticos;
+    insert into bot_catedraticos(za_profesor,nombres,apellidos,profesion,activo) 
+		values(za_prof,nombre,apellido,profesi,activ);
+	RETURN za_prof;
+end//
 
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_catedratico;
+
+delimiter //
+create procedure upd_catedratico(
+	in za_prof int,
+    in nombre varchar(100),
+    in apellido varchar(100),
+    in profesi varchar(200),
+    in activ bit)
+begin
+	update bot_catedraticos
+	set
+		nombres = nombre,
+		apellidos = apellido,
+		profesion = profesi,
+		activo = activ
+	where za_profesor = za_prof;
+end//
+
+delimiter //
 create procedure sen_bot_cursos_pensums(
 	in za_carre int,
     in ano_pen int,
