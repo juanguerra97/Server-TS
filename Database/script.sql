@@ -329,7 +329,42 @@ begin
 
 end//;
 
+delimiter ;
+DROP FUNCTION IF EXISTS ins_jornada;
+
 delimiter //
+CREATE FUNCTION ins_jornada(
+    za_carre int,
+    nombre_jor varchar(30),
+    activ bit
+) RETURNS INT DETERMINISTIC 
+BEGIN
+	DECLARE za_jor INT DEFAULT 0;
+    
+    select ifnull(max(za_jornada),0) + 1 into za_jor  from bot_jornadas 
+		where za_carrera = za_carre;
+	
+    insert into bot_jornadas(za_carrera,za_jornada,nombre_jornada,activo) 
+		values(za_carre, za_jor, nombre_jor, activ);
+	RETURN za_jor;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_jornada;
+
+delimiter //
+CREATE PROCEDURE upd_jornada(
+	in za_carre int,
+	in za_jor int,
+    in nombre_jor varchar(30),
+    in activ bit)
+BEGIN
+	update bot_jornadas
+	set
+		nombre_jornada = nombre_jor,
+		activo = activ
+	where za_carrera = za_carre and za_jornada = za_jor;
+END//
 
 delimiter //
 create procedure sen_bot_pensums(
