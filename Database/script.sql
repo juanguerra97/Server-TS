@@ -114,8 +114,7 @@ create table bot_cursos_pensums(
     constraint FK_curpensum_a_cursos foreign key(za_curso)
 				references bot_cursos(za_curso),
 	constraint FK_curpensum_a_pensums foreign key(za_carrera, ano_pensum)
-				references bot_pensums(za_carrera, ano_pensum),
-	unique(za_carrera, ano_pensum, za_curso)
+				references bot_pensums(za_carrera, ano_pensum)
 );
 
 -- bot_lin_profesiones
@@ -611,7 +610,41 @@ begin
 
 end//;
 
+delimiter ;
+DROP PROCEDURE IF EXISTS ins_cursopensum;
+
 delimiter //
+CREATE PROCEDURE ins_cursopensum(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int,
+    in cic int,
+    in activ bit)
+BEGIN
+	insert into bot_cursos_pensums(za_carrera,ano_pensum,za_curso,ciclo,activo) 
+		values(za_carre,ano_pen,za_cur,cic,activ);
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_cursopensum;
+
+delimiter //
+CREATE PROCEDURE upd_cursopensum(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int,
+    in cic int,
+    in activ bit)
+BEGIN
+	update bot_cursos_pensums
+	set
+		ciclo = cic,
+		activo = activ
+	where
+		za_carrera = za_carre and
+		ano_pensum = ano_pen and
+		za_curso = za_cur;
+END//
 
 delimiter //
 CREATE PROCEDURE sen_bot_dias_jornadas(
