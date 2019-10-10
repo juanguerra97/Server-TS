@@ -11,9 +11,11 @@ class PensumsRoutes{
     }
 
     config():void{
-        this.router.get('/:za_carrera', pensumsController.getAllPensums);
-        this.router.get('/:za_carrera/:ano_pensum', pensumsController.getOnePensums);
-        this.router.post('/', pensumsController.opcionesPensums);
+        this.router.get('/:za_carrera(\\d+)', pensumsController.selectAllPensumsByCarrera);
+        this.router.get('/:za_carrera(\\d+)/:ano_pensum(\\d+)', pensumsController.selectPensum);
+        this.router.post('/', pensumsController.insert);
+        this.router.delete('/:za_carrera(\\d+)/:ano_pensum(\\d+)', pensumsController.delete);
+        this.router.put('/:za_carrera(\\d+)/:ano_pensum(\\d+)',pensumsController.update);
     }
 
 }
