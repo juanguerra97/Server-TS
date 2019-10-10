@@ -11,9 +11,11 @@ class JornadasRoutes{
     }
 
     config():void{
-        this.router.get('/:za_carrera', jornadasController.getAllJornadas);
-        this.router.get('/:za_carrera/:za_jornada', jornadasController.getUnaJornada);
-        this.router.post('/', jornadasController.opcionesJornadas);
+        this.router.get('/:za_carrera(\\d+)', jornadasController.selectAllByCarrera);
+        this.router.get('/:za_carrera(\\d+)/:za_jornada(\\d+)', jornadasController.select);
+        this.router.post('/', jornadasController.insert);
+        this.router.delete('/:za_carrera(\\d+)/:za_jornada(\\d+)', jornadasController.delete);
+        this.router.put('/:za_carrera(\\d+)/:za_jornada(\\d+)', jornadasController.update);
     }
 
 }
