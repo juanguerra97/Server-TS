@@ -406,7 +406,49 @@ begin
     end if;
 
 end//;
+
+delimiter ;
+DROP PROCEDURE IF EXISTS ins_pensum;
+
 delimiter //
+CREATE PROCEDURE ins_pensum(
+	in za_carre int,
+	in ano_pen int,
+    in cod_pensum varchar(10),
+    in activ bit)
+BEGIN
+	insert into bot_pensums(za_carrera,ano_pensum,codigo_pensum,activo) 
+		values(za_carre,ano_pen,cod_pensum,activ);
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_pensum;
+
+delimiter //
+CREATE PROCEDURE upd_pensum(
+	in za_carre int,
+	in ano_pen int,
+    in cod_pensum varchar(10),
+    in activ bit)
+BEGIN
+	update bot_pensums
+	set
+		codigo_pensum = cod_pensum,
+		activo = activ
+	where
+		za_carrera = za_carre and ano_pensum = ano_pen;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS del_pensum;
+
+delimiter //
+CREATE PROCEDURE del_pensum(
+	in za_carre int,
+	in ano_pen int)
+BEGIN
+	delete from bot_pensums where za_carrera = za_carre and ano_pensum = ano_pen;
+END//
 
 delimiter //
 
