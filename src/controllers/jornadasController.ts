@@ -150,7 +150,7 @@ class JornadasController{
         }catch(error){
             error = error.message;
 
-            const ErrorFkRegex:RegExp = /^ER_ROW_IS_REFERENCED_2:.*$/g;
+            const ErrorFkRegex:RegExp = /^ER_ROW_IS_REFERENCED(_2)?:.*$/g;
             let matchError = ErrorFkRegex.exec(error);
             if(matchError){
                 error = "Otros registros referencian a esta jornada";
