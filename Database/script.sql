@@ -753,7 +753,63 @@ begin
     end if;
 
 end//;
+
+delimiter ;
+DROP FUNCTION IF EXISTS ins_dia;
+
 delimiter //
+CREATE FUNCTION ins_dia(
+	za_carre int,
+    za_jor int,
+    di varchar(20),
+    activ bit
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE za_d INT DEFAULT 0;
+    
+    select ifnull(max(za_dia),0) + 1 into za_d from bot_dias_jornadas
+	where za_carrera = za_carre and za_jornada = za_jor;
+        
+	insert into bot_dias_jornadas(za_carrera,za_jornada,za_dia,dia,activo) 
+    values(za_carre, za_jor, za_d, di, activ);
+    
+    RETURN za_d;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_dia;
+
+delimiter //
+CREATE PROCEDURE upd_dia(
+	in za_carre int,
+    in za_jor int,
+	in za_d int,
+    in di varchar(20),
+    in activ bit)
+BEGIN
+	update bot_dias_jornadas
+	set
+		dia = di,
+		activo = activ
+	where za_carrera = za_carre and
+		za_jornada = za_jor and
+		za_dia = za_d;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS del_dia;
+
+delimiter //
+CREATE PROCEDURE del_dia(
+	in za_carre int,
+    in za_jor int,
+	in za_d int)
+BEGIN
+	delete from bot_dias_jornadas
+	where za_carrera = za_carre and
+		za_jornada = za_jor and
+		za_dia = za_d;
+END//
 
 delimiter //
 create procedure sen_bot_asignaciones(
