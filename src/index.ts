@@ -55,6 +55,9 @@ class Server{
         this.app.get('/', function(req, res) {
             res.sendFile(path.join(__dirname));
         });
+        this.app.get('/descargas/android',function(req,res){
+            res.download(__dirname + '/descargas/planumg.apk');
+        });
 
         this.app.use(checkAuth);
         this.app.use('/cruds/carreras', carrerasRoutes);
