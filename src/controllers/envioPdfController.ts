@@ -7,7 +7,7 @@ class EnvioPdfController{
     public async enviarPdf(req:Request,res:Response){
         try{
             
-            checkCamposBody(req,['correo','pdf']);
+            checkCamposBody(req,['correo','pdf','asunto','texto','nombrepdf']);
             const body = req.body;
 
             var transporter = nodemailer.createTransport({
@@ -21,11 +21,11 @@ class EnvioPdfController{
               var mailOptions = {
                 from: 'deswebumg@gmail.com',
                 to: body.correo,
-                subject: 'Planificacion de cursos',
-                text: 'Reporte de planificacion de cursos',
+                subject: body.asunto,
+                text: body.texto,
                 attachments: [
                     {
-                        filename: 'planificacion.pdf',
+                        filename: body.nombrepdf,
                         path: body.pdf,
                         contentType: 'application/pdf',
                         encoding: 'base64'   
