@@ -114,8 +114,7 @@ create table bot_cursos_pensums(
     constraint FK_curpensum_a_cursos foreign key(za_curso)
 				references bot_cursos(za_curso),
 	constraint FK_curpensum_a_pensums foreign key(za_carrera, ano_pensum)
-				references bot_pensums(za_carrera, ano_pensum),
-	unique(za_carrera, ano_pensum, za_curso)
+				references bot_pensums(za_carrera, ano_pensum)
 );
 
 -- bot_lin_profesiones
@@ -248,10 +247,42 @@ begin
 
 end//;
 
-delimiter //
+delimiter ;
+DROP FUNCTION IF EXISTS ins_carrera;
 
 delimiter //
+create function ins_carrera(
+    cod_carrera varchar(15),
+    name_carrera varchar(100),
+    activ bit
+) RETURNS INT DETERMINISTIC
+begin
+	declare za_carera int default 0;
+	select ifnull(max(za_carrera),0) + 1 into za_carera from bot_carreras;
+	insert into bot_carreras(za_carrera,codigo_carrera,nombre_carrera,activo) 
+		values(za_carera, cod_carrera, name_carrera, activ);
+	return za_carera;
+end//
 
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_carrera;
+
+delimiter //
+create procedure upd_carrera(
+	in za_carera int,
+	in cod_carrera varchar(15),
+    in name_carrera varchar(100),
+    in activ bit)
+begin
+	update bot_carreras
+	set
+		codigo_carrera = cod_carrera,
+		nombre_carrera = name_carrera,
+		activo = activ
+	where za_carrera = za_carera;
+end//
+
+delimiter //
 create procedure sen_bot_jornadas(
 	in za_jor int,
     in za_carre int,
@@ -297,7 +328,42 @@ begin
 
 end//;
 
+delimiter ;
+DROP FUNCTION IF EXISTS ins_jornada;
+
 delimiter //
+CREATE FUNCTION ins_jornada(
+    za_carre int,
+    nombre_jor varchar(30),
+    activ bit
+) RETURNS INT DETERMINISTIC 
+BEGIN
+	DECLARE za_jor INT DEFAULT 0;
+    
+    select ifnull(max(za_jornada),0) + 1 into za_jor  from bot_jornadas 
+		where za_carrera = za_carre;
+	
+    insert into bot_jornadas(za_carrera,za_jornada,nombre_jornada,activo) 
+		values(za_carre, za_jor, nombre_jor, activ);
+	RETURN za_jor;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_jornada;
+
+delimiter //
+CREATE PROCEDURE upd_jornada(
+	in za_carre int,
+	in za_jor int,
+    in nombre_jor varchar(30),
+    in activ bit)
+BEGIN
+	update bot_jornadas
+	set
+		nombre_jornada = nombre_jor,
+		activo = activ
+	where za_carrera = za_carre and za_jornada = za_jor;
+END//
 
 delimiter //
 create procedure sen_bot_pensums(
@@ -340,7 +406,49 @@ begin
     end if;
 
 end//;
+
+delimiter ;
+DROP PROCEDURE IF EXISTS ins_pensum;
+
 delimiter //
+CREATE PROCEDURE ins_pensum(
+	in za_carre int,
+	in ano_pen int,
+    in cod_pensum varchar(10),
+    in activ bit)
+BEGIN
+	insert into bot_pensums(za_carrera,ano_pensum,codigo_pensum,activo) 
+		values(za_carre,ano_pen,cod_pensum,activ);
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_pensum;
+
+delimiter //
+CREATE PROCEDURE upd_pensum(
+	in za_carre int,
+	in ano_pen int,
+    in cod_pensum varchar(10),
+    in activ bit)
+BEGIN
+	update bot_pensums
+	set
+		codigo_pensum = cod_pensum,
+		activo = activ
+	where
+		za_carrera = za_carre and ano_pensum = ano_pen;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS del_pensum;
+
+delimiter //
+CREATE PROCEDURE del_pensum(
+	in za_carre int,
+	in ano_pen int)
+BEGIN
+	delete from bot_pensums where za_carrera = za_carre and ano_pensum = ano_pen;
+END//
 
 delimiter //
 
@@ -385,7 +493,42 @@ begin
 
 end//;
 
+delimiter ;
+DROP FUNCTION IF EXISTS ins_curso;
+
 delimiter //
+create function ins_curso(
+    nombre_cur varchar(100),
+    usa_lab bit,
+    activ bit)
+RETURNS INT DETERMINISTIC
+begin
+	declare za_cur int default 0;
+	select ifnull(max(za_curso),0) + 1 into za_cur from bot_cursos;
+    insert into bot_cursos(za_curso,nombre_curso,usa_laboratorio,activo) 
+		values(za_cur,nombre_cur,usa_lab,activ);
+	RETURN za_cur;
+end//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_curso;
+
+delimiter //
+create procedure upd_curso(
+	in za_cur int,
+	in nombre_cur varchar(100),
+    in usa_lab bit,
+    in activ bit)
+begin
+	update bot_cursos
+	set
+		nombre_curso = nombre_cur,
+		usa_laboratorio = usa_lab,
+		activo = activ
+	where za_curso = za_cur;
+end//
+
+
 delimiter //
 create procedure sen_bot_catedraticos(
 	in za_prof int,
@@ -428,10 +571,46 @@ begin
     end if;
 
 end//;
-delimiter //
+
+delimiter ;
+DROP FUNCTION IF EXISTS ins_catedratico;
 
 delimiter //
+CREATE FUNCTION ins_catedratico(
+    nombre varchar(100),
+    apellido varchar(100),
+    profesi varchar(200),
+    activ bit) 
+RETURNS INT DETERMINISTIC
+begin
+	declare za_prof int default 0;
+	select ifnull(max(za_profesor),0) + 1 into za_prof from bot_catedraticos;
+    insert into bot_catedraticos(za_profesor,nombres,apellidos,profesion,activo) 
+		values(za_prof,nombre,apellido,profesi,activ);
+	RETURN za_prof;
+end//
 
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_catedratico;
+
+delimiter //
+create procedure upd_catedratico(
+	in za_prof int,
+    in nombre varchar(100),
+    in apellido varchar(100),
+    in profesi varchar(200),
+    in activ bit)
+begin
+	update bot_catedraticos
+	set
+		nombres = nombre,
+		apellidos = apellido,
+		profesion = profesi,
+		activo = activ
+	where za_profesor = za_prof;
+end//
+
+delimiter //
 create procedure sen_bot_cursos_pensums(
 	in za_carre int,
     in ano_pen int,
@@ -473,7 +652,41 @@ begin
 
 end//;
 
+delimiter ;
+DROP PROCEDURE IF EXISTS ins_cursopensum;
+
 delimiter //
+CREATE PROCEDURE ins_cursopensum(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int,
+    in cic int,
+    in activ bit)
+BEGIN
+	insert into bot_cursos_pensums(za_carrera,ano_pensum,za_curso,ciclo,activo) 
+		values(za_carre,ano_pen,za_cur,cic,activ);
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_cursopensum;
+
+delimiter //
+CREATE PROCEDURE upd_cursopensum(
+	in za_carre int,
+    in ano_pen int,
+    in za_cur int,
+    in cic int,
+    in activ bit)
+BEGIN
+	update bot_cursos_pensums
+	set
+		ciclo = cic,
+		activo = activ
+	where
+		za_carrera = za_carre and
+		ano_pensum = ano_pen and
+		za_curso = za_cur;
+END//
 
 delimiter //
 CREATE PROCEDURE sen_bot_dias_jornadas(
@@ -540,7 +753,63 @@ begin
     end if;
 
 end//;
+
+delimiter ;
+DROP FUNCTION IF EXISTS ins_dia;
+
 delimiter //
+CREATE FUNCTION ins_dia(
+	za_carre int,
+    za_jor int,
+    di varchar(20),
+    activ bit
+) RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE za_d INT DEFAULT 0;
+    
+    select ifnull(max(za_dia),0) + 1 into za_d from bot_dias_jornadas
+	where za_carrera = za_carre and za_jornada = za_jor;
+        
+	insert into bot_dias_jornadas(za_carrera,za_jornada,za_dia,dia,activo) 
+    values(za_carre, za_jor, za_d, di, activ);
+    
+    RETURN za_d;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS upd_dia;
+
+delimiter //
+CREATE PROCEDURE upd_dia(
+	in za_carre int,
+    in za_jor int,
+	in za_d int,
+    in di varchar(20),
+    in activ bit)
+BEGIN
+	update bot_dias_jornadas
+	set
+		dia = di,
+		activo = activ
+	where za_carrera = za_carre and
+		za_jornada = za_jor and
+		za_dia = za_d;
+END//
+
+delimiter ;
+DROP PROCEDURE IF EXISTS del_dia;
+
+delimiter //
+CREATE PROCEDURE del_dia(
+	in za_carre int,
+    in za_jor int,
+	in za_d int)
+BEGIN
+	delete from bot_dias_jornadas
+	where za_carrera = za_carre and
+		za_jornada = za_jor and
+		za_dia = za_d;
+END//
 
 delimiter //
 create procedure sen_bot_asignaciones(

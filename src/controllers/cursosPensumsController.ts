@@ -1,16 +1,160 @@
 import { Request, Response } from 'express';
 import pool from '../db';
+import checkCamposBody from '../utils';
+
+const CAMPOS_MODIFICABLES = ['ciclo','activo'];
+const CAMPOS_CURSOPENSUM = ['za_carrera','ano_pensum','za_curso',...CAMPOS_MODIFICABLES];
 
 class CursosPensumsController{
 
     public async getAllCursosPensums (req:Request, res:Response) {
-        const rows = await pool.query('call cos_bot_cursos_pensums(' + req.params.za_carrera + ',' + req.params.ano_pensum + ',0);');
-        res.json(rows[0][0]);
+        try {
+            const rows = await pool.query('call cos_bot_cursos_pensums(' + req.params.za_carrera + ',' + req.params.ano_pensum + ',0);');
+            res.json({
+                status: 200,
+                message: "CursosPensums",
+                data: rows[0][0]
+            });
+        } catch(error){
+            error = error.message;
+            res.json({
+                status: 400,
+                message: "No se pudieron obtener los datos",
+                error
+            });
+        }
     }
 
     public async getUnoCursosPensums (req:Request, res:Response) {
-        const rows = await pool.query('call cos_bot_cursos_pensums(' + req.params.za_carrera + ',' + req.params.ano_pensum + ',' + req.params.za_curso + ');');
-        res.json(rows[0][0]);
+        try {
+            const rows = await pool.query('call cos_bot_cursos_pensums(' + req.params.za_carrera + ',' + req.params.ano_pensum + ',' + req.params.za_curso + ');');
+            let cursopensum = {};
+            if(rows[0].length == 1){
+                cursopensum = rows[0][0];
+            }
+            res.json({
+                status: 200,
+                message: "CursoPensum",
+                data: cursopensum
+            });
+        } catch(error){
+            error = error.message;
+            res.json({
+                status: 400,
+                message: "No se pudieron obtener los datos",
+                error
+            });
+        }
+    }
+
+    public async insert(req:Request, res:Response) {
+        try {
+            const body = req.body;
+            checkCamposBody(req,CAMPOS_CURSOPENSUM);
+
+            await pool.query(`call ins_cursopensum(${body.za_carrera},${body.ano_pensum},${body.za_curso},${body.ciclo},${body.activo})`);
+
+            res.json({
+                status: 200,
+                message: "Se guardaron los datos",
+                data: {
+                    za_carrera: body.za_carrera,
+                    ano_pensum: body.ano_pensum,
+                    za_curso: body.za_curso,
+                    ciclo: body.ciclo,
+                    activo: body.activo
+                }
+            });
+
+        } catch(error) {
+            error = error.message;
+
+            const ErrorDupRegex:RegExp = /^ER_DUP_ENTRY:.*for key '(.*)'.*$/g;
+
+            let matchError:any = ErrorDupRegex.exec(error);
+            if(matchError){
+                if(matchError[1] == 'PRIMARY'){
+                    error = 'El ID esta duplicado';
+                }
+            }
+
+            res.json({
+               status: 400,
+               message: "No se pudieron guardar los datos",
+               error
+            });
+        }
+    }
+
+    public async update(req:Request, res:Response) {
+        try {
+            const body = req.body;
+            const params = req.params;
+            checkCamposBody(req,CAMPOS_MODIFICABLES);
+
+            await pool.query(`call upd_cursopensum(${params.za_carrera},${params.ano_pensum},${params.za_curso},${body.ciclo},${body.activo})`);
+
+            res.json({
+                status: 200,
+                message: "Se guardaron los datos",
+                data: {
+                    za_carrera: params.za_carrera,
+                    ano_pensum: params.ano_pensum,
+                    za_curso: params.za_curso,
+                    ciclo: body.ciclo,
+                    activo: body.activo
+                }
+            });
+
+        } catch(error) {
+            error = error.message;
+
+            const ErrorDupRegex:RegExp = /^ER_DUP_ENTRY:.*for key '(.*)'.*$/g;
+
+            let matchError:any = ErrorDupRegex.exec(error);
+            if(matchError){
+                if(matchError[1] == 'PRIMARY'){
+                    error = 'El ID esta duplicado';
+                }
+            }
+
+            res.json({
+               status: 400,
+               message: "No se pudieron guardar los cambios",
+               error
+            });
+        }
+    }
+
+    public async delete(req:Request,res:Response){
+
+        try{
+            const { za_carrera:za_carrera, ano_pensum:ano_pensum, za_curso:za_curso } = req.params;
+
+            await pool.query(`
+                    DELETE FROM bot_cursos_pensums
+                    WHERE za_carrera = ${za_carrera} AND ano_pensum = ${ano_pensum} AND za_curso = ${za_curso}`);
+
+            res.json({
+                status: 200,
+                message: "Se eliminaron los datos"
+            });
+
+        }catch(error){
+            error = error.message;
+
+            const ErrorFkRegex:RegExp = /^ER_ROW_IS_REFERENCED(_2)?:.*$/g;
+            let matchError = ErrorFkRegex.exec(error);
+            if(matchError){
+                error = "Otros registros referencian a estos datos";
+            }
+
+            res.json({
+               status: 400,
+               message: "No se pudieron eliminar los datos",
+               error
+            });
+        }
     }
 
     public async opcionesCursosPensums (req:Request, res:Response) {
@@ -59,7 +203,7 @@ class CursosPensumsController{
 
             res.json({
                 status: 400,
-                message: "Ocurrió un error",
+                message: "No se pudieron obtener los datos",
                 error:{
                     message: error
                 }
