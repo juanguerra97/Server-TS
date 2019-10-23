@@ -97,17 +97,17 @@ class CarrerasController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_carrera'){
-                    error = 'El nombre de la carrera esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'UK_codigo_carrera'){
-                    error = 'El codigo de la carrera esta duplicado';
+                    error = 'El codigo esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID de la carrera esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                status: 400,
-               message: "No se pudo guardar la carrera",
+               message: "No se guardo la carrera",
                error
             });
         }
@@ -138,17 +138,17 @@ class CarrerasController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_carrera'){
-                    error = 'El nombre de la carrera esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'UK_codigo_carrera'){
-                    error = 'El codigo de la carrera esta duplicado';
+                    error = 'El codigo esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID de la carrera esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                 status: 400,
-                message: "No se pudieron guardar los cambios",
+                message: "No se guardaron los cambios",
                 error
             });
         }
@@ -178,7 +178,7 @@ class CarrerasController{
 
             res.json({
                status: 400,
-               message: "No se pudo eliminar la carrera",
+               message: "Se cancelo la eliminacion",
                error
             });
         }

@@ -88,13 +88,13 @@ class CatedraticosController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del catedratico esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                 status: 400,
-                message: "No se pudo guardar el catedratico",
+                message: "No guardo el catedratico",
                 error
             });
         }
@@ -121,7 +121,7 @@ class CatedraticosController{
 
             res.json({
                 status: 400,
-                message: "No se pudieron guardar los cambios",
+                message: "No se guardaron los cambios",
                 error
             });
         }
@@ -151,7 +151,7 @@ class CatedraticosController{
 
             res.json({
                 status: 400,
-                message: "No se pudo eliminar el catedratico",
+                message: "Se cancelo la eliminacion",
                 error
             });
         }

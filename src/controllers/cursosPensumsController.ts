@@ -80,7 +80,7 @@ class CursosPensumsController{
 
             res.json({
                status: 400,
-               message: "No se pudieron guardar los datos",
+               message: "No se guardaron los datos",
                error
             });
         }
@@ -120,7 +120,7 @@ class CursosPensumsController{
 
             res.json({
                status: 400,
-               message: "No se pudieron guardar los cambios",
+               message: "No se guardaron los cambios",
                error
             });
         }
@@ -151,7 +151,7 @@ class CursosPensumsController{
 
             res.json({
                status: 400,
-               message: "No se pudieron eliminar los datos",
+               message: "Se cancelo la eliminacion",
                error
             });
         }

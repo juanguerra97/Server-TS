@@ -79,13 +79,13 @@ class DiasJornadasController{
                     error = 'El dia esta duplicado';
                 }
                 else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del dia esta duplicado';
+                    error = 'El ID esta duplicado';
                 } 
             }
 
             res.json({
                 status: 400,
-                message: "No se pudo guardar el dia",
+                message: "No se guardo el dia",
                 error
             });
         }
@@ -122,13 +122,13 @@ class DiasJornadasController{
                     error = 'El dia esta duplicado';
                 }
                 else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del dia esta duplicado';
+                    error = 'El ID esta duplicado';
                 } 
             }
 
             res.json({
                 status: 400,
-                message: "No se pudieron guardar los cambios",
+                message: "No se guardaron los cambios",
                 error
             });
         }
@@ -155,7 +155,7 @@ class DiasJornadasController{
 
             res.json({
                 status: 400,
-                message: "No se pudo eliminar el dia",
+                message: "Se cancelo la eliminacion",
                 error
             });            
         }

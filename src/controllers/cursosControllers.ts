@@ -84,15 +84,15 @@ class CursosController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_curso'){
-                    error = 'El nombre del curso esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del curso esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                 status: 400,
-                message: "No se pudo guardar el curso",
+                message: "No se guardo el curso",
                 error
             });
         }
@@ -119,15 +119,15 @@ class CursosController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_curso'){
-                    error = 'El nombre del curso esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del curso esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                 status: 400,
-                message: "No se pudo guardar el curso",
+                message: "No se guardaron los cambios",
                 error
             });
         }
@@ -155,7 +155,7 @@ class CursosController{
 
             res.json({
                 status: 400,
-                message: "No se pudo eliminar el curso",
+                message: "Se cancelo la eliminacion",
                 error
             });
         }

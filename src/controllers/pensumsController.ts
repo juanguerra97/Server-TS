@@ -79,15 +79,15 @@ class PensumsController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_codigo_pensum'){
-                    error = 'El codigo del pensum esta duplicado';
+                    error = 'El codigo esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del pensum esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                status: 400,
-               message: "No se pudo guardar el pensum",
+               message: "No se guardo el pensum",
                error
             });
         }
@@ -120,15 +120,15 @@ class PensumsController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_codigo_pensum'){
-                    error = 'El codigo del pensum esta duplicado';
+                    error = 'El codigoesta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID del pensum esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                status: 400,
-               message: "No se pudieron guardar los cambios",
+               message: "No se guardaron los cambios",
                error
             });
         }
@@ -157,7 +157,7 @@ class PensumsController{
 
             res.json({
                status: 400,
-               message: "No se pudo eliminar el pensum",
+               message: "Se cancelo la eliminacion",
                error
             });
         }

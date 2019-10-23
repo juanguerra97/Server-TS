@@ -78,15 +78,15 @@ class JornadasController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_jornada'){
-                    error = 'El nombre de la jornada esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID de la jornada esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                status: 400,
-               message: "No se pudo guardar la jornada",
+               message: "No se guardo la jornada",
                error
             });
         }
@@ -119,15 +119,15 @@ class JornadasController{
             let matchError:any = ErrorDupRegex.exec(error);
             if(matchError){
                 if(matchError[1] == 'UK_nombre_jornada'){
-                    error = 'El nombre de la jornada esta duplicado';
+                    error = 'El nombre esta duplicado';
                 } else if(matchError[1] == 'PRIMARY'){
-                    error = 'El ID de la jornada esta duplicado';
+                    error = 'El ID esta duplicado';
                 }
             }
 
             res.json({
                status: 400,
-               message: "No se pudo guardar la jornada",
+               message: "No se guardaron los cambios",
                error
             });
         }
@@ -158,7 +158,7 @@ class JornadasController{
 
             res.json({
                status: 400,
-               message: "No se pudo eliminar la jornada",
+               message: "Se cancelo la eliminacion",
                error
             });
         }
