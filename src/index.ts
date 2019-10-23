@@ -56,7 +56,7 @@ class Server{
             res.sendFile(path.join(__dirname));
         });
         this.app.get('/descargas/android',function(req,res){
-            res.download(__dirname + '/descargas/planumg.apk');
+            res.download(__dirname + '/../descargas/planumg.apk');
         });
 
         this.app.use(checkAuth);
