@@ -13,8 +13,8 @@ class EnvioPdfController{
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                  user: 'deswebumg@gmail.com',
-                  pass: 'desarrollo2019'
+                  user: 'tucorreo@gmail.com',
+                  pass: 'tucontraseña'
                 }
               });
               
